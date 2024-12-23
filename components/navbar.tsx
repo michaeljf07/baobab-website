@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation"; // Use usePathname instead of useRouter
 import { useState } from "react";
 
-const Navbar = () => {
+function Navbar() {
     const pathname = usePathname();
     const [isSignedIn, setIsSignedIn] = useState(false); // Mock state for sign-in
     const profilePicture = "/logo.png";
@@ -75,6 +75,6 @@ const Navbar = () => {
             </div>
         </nav>
     );
-};
+}
 
 export default Navbar;
