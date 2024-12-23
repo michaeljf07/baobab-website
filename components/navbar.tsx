@@ -45,6 +45,15 @@ const Navbar = () => {
                         } hover:text-amber-500`}>
                         Contact
                     </Link>
+                    <Link
+                        href="/wishlists"
+                        className={`${
+                            isActive("/wishlists")
+                                ? "text-amber-400 font-bold"
+                                : "text-black"
+                        } hover:text-amber-500`}>
+                        Wishlists
+                    </Link>
                 </div>
                 <div className="flex items-center mr-12">
                     {isSignedIn ? (
@@ -58,7 +67,7 @@ const Navbar = () => {
                     ) : (
                         <button
                             onClick={() => setIsSignedIn(true)}
-                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 h-12 flex items-center justify-center">
+                            className="bg-cyan-600 text-white px-4 py-2 rounded hover:bg-amber-500 h-12 flex items-center justify-center">
                             Sign In
                         </button>
                     )}
