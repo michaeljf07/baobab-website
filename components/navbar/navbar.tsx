@@ -12,34 +12,37 @@ const Navbar = () => {
     const isActive = (path: string) => pathname === path;
 
     return (
-        <nav className="bg-gray-800 h-20 p-4 flex items-center w-full">
+        <nav className="bg-slate-100 h-20 p-4 flex items-center w-full">
             <div className="flex items-center w-full justify-between">
-                <div className="flex space-x-12 items-center ml-12">
+                <div className="flex space-x-12 items-center ml-12 text-lg">
+                    <Link href="/">
+                        <img src="logo.png" className="w-14 rounded-md" />
+                    </Link>
                     <Link
                         href="/"
                         className={`${
                             isActive("/")
-                                ? "text-blue-500 font-bold"
-                                : "text-white"
-                        }`}>
+                                ? "text-amber-500 font-bold"
+                                : "text-text-black"
+                        } hover:text-amber-500`}>
                         Home
                     </Link>
                     <Link
                         href="/about"
                         className={`${
                             isActive("/about")
-                                ? "text-blue-500 font-bold"
-                                : "text-white"
-                        }`}>
+                                ? "text-amber-400 font-bold"
+                                : "text-black"
+                        } hover:text-amber-500`}>
                         About
                     </Link>
                     <Link
                         href="/contact"
                         className={`${
                             isActive("/contact")
-                                ? "text-blue-500 font-bold"
-                                : "text-white"
-                        }`}>
+                                ? "text-amber-400 font-bold"
+                                : "text-black"
+                        } hover:text-amber-500`}>
                         Contact
                     </Link>
                 </div>
