@@ -10,9 +10,9 @@ function Contact() {
     const [message, setMessage] = useState("");
     const [submitted, setSubmitted] = useState(false);
 
-    const handleSubmit = async (event: FormEvent) => {
-        event.preventDefault();
-        console.log("hello");
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
         const formData = {
             name,
             email,
@@ -20,11 +20,18 @@ function Contact() {
             message,
         };
 
-        try {
-            console.log("Form Data:", formData);
-            setSubmitted(true);
-        } catch (error) {
-            console.error("Error:", error);
+        const response = await fetch("/api/emails", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+            alert("Message sent successfully!");
+        } else {
+            alert("Failed to send message.");
         }
     };
 
