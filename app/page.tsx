@@ -1,5 +1,11 @@
+import Carousel from "@/components/carousel";
 import Navbar from "../components/navbar";
 
 export default function Home() {
-    return <Navbar />;
+    return (
+        <div>
+            <Navbar />
+            <Carousel />
+        </div>
+    );
 }
