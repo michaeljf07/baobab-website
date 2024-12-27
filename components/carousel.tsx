@@ -2,21 +2,25 @@
 
 import { useState, useEffect } from 'react';
 
-const Carousel = () => {
+interface CarouselProps {
+    onReadMoreClick: () => void;
+}
+
+const Carousel = ({ onReadMoreClick }: CarouselProps) => {
     const [currentSlide, setCurrentSlide] = useState(0);
     
     const slides = [
         {
             title: "Welcome to Baobab",
-            image: "/placeholder1.jpg"
+            image: "carousel1.jpg"
         },
         {
             title: "Make a Difference",
-            image: "/placeholder2.jpg"
+            image: "carousel2.jpg"
         },
         {
             title: "Join Our Community",
-            image: "/placeholder3.jpg"
+            image: "carousel3.jpg"
         }
     ];
 
@@ -28,16 +32,26 @@ const Carousel = () => {
         setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
     };
 
-    const goToSlide = (index: number) => {
-        setCurrentSlide(index);
-    };
-
     useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'ArrowLeft') {
+                prevSlide();
+            } else if (e.key === 'ArrowRight') {
+                nextSlide();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
         const timer = setInterval(() => {
             nextSlide();
         }, 5000);
 
-        return () => clearInterval(timer);
+        // Cleanup
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            clearInterval(timer);
+        };
     }, []);
 
     return (
@@ -59,7 +73,10 @@ const Carousel = () => {
                     />
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                         <h2 className="text-white text-6xl font-bold mb-8">{slide.title}</h2>
-                        <button className="border-2 border-white text-white px-8 py-3 text-lg rounded-lg hover:bg-white hover:text-black transition-colors duration-300">
+                        <button 
+                            onClick={onReadMoreClick}
+                            className="border-2 border-white text-white px-8 py-3 text-lg rounded-lg hover:bg-white hover:text-black transition-colors duration-300"
+                        >
                             Read More
                         </button>
                     </div>
@@ -87,7 +104,6 @@ const Carousel = () => {
                 {slides.map((_, index) => (
                     <button
                         key={index}
-                        onClick={() => goToSlide(index)}
                         className={`w-3 h-3 rounded-full ${
                             currentSlide === index ? 'bg-white scale-125' : 'bg-white/50'
                         } transition-all duration-300`}
