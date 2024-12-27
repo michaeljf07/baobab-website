@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 interface CarouselProps {
     onReadMoreClick: () => void;
@@ -8,20 +8,20 @@ interface CarouselProps {
 
 const Carousel = ({ onReadMoreClick }: CarouselProps) => {
     const [currentSlide, setCurrentSlide] = useState(0);
-    
+
     const slides = [
         {
             title: "Welcome to Baobab",
-            image: "carousel1.jpg"
+            image: "carousel1.jpg",
         },
         {
             title: "Make a Difference",
-            image: "carousel2.jpg"
+            image: "carousel2.jpg",
         },
         {
             title: "Join Our Community",
-            image: "carousel3.jpg"
-        }
+            image: "carousel3.jpg",
+        },
     ];
 
     const nextSlide = () => {
@@ -34,14 +34,14 @@ const Carousel = ({ onReadMoreClick }: CarouselProps) => {
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'ArrowLeft') {
+            if (e.key === "ArrowLeft") {
                 prevSlide();
-            } else if (e.key === 'ArrowRight') {
+            } else if (e.key === "ArrowRight") {
                 nextSlide();
             }
         };
 
-        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener("keydown", handleKeyDown);
 
         const timer = setInterval(() => {
             nextSlide();
@@ -49,7 +49,7 @@ const Carousel = ({ onReadMoreClick }: CarouselProps) => {
 
         // Cleanup
         return () => {
-            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener("keydown", handleKeyDown);
             clearInterval(timer);
         };
     }, []);
@@ -60,43 +60,63 @@ const Carousel = ({ onReadMoreClick }: CarouselProps) => {
                 <div
                     key={index}
                     className={`absolute w-full h-full transition-opacity duration-500 ease-in-out ${
-                        currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'
-                    }`}
-                >
-                    <div 
+                        currentSlide === index
+                            ? "opacity-100 z-10"
+                            : "opacity-0 z-0"
+                    }`}>
+                    <div
                         className="absolute inset-0 bg-black/50"
                         style={{
                             backgroundImage: `url(${slide.image})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center'
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
                         }}
                     />
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <h2 className="text-white text-6xl font-bold mb-8">{slide.title}</h2>
-                        <button 
+                        <h2 className="text-white text-6xl font-bold mb-8">
+                            {slide.title}
+                        </h2>
+                        <button
                             onClick={onReadMoreClick}
-                            className="border-2 border-white text-white px-8 py-3 text-lg rounded-lg hover:bg-white hover:text-black transition-colors duration-300"
-                        >
+                            className="border-2 border-white text-white px-8 py-3 text-lg rounded-lg hover:bg-white hover:text-black transition-colors duration-300">
                             Read More
                         </button>
                     </div>
                 </div>
             ))}
 
-            <button 
+            <button
                 onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-20"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-20">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-12 w-12"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 19l-7-7 7-7"
+                    />
                 </svg>
             </button>
-            <button 
+            <button
                 onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-20"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-20">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-12 w-12"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                    />
                 </svg>
             </button>
 
@@ -105,7 +125,9 @@ const Carousel = ({ onReadMoreClick }: CarouselProps) => {
                     <button
                         key={index}
                         className={`w-3 h-3 rounded-full ${
-                            currentSlide === index ? 'bg-white scale-125' : 'bg-white/50'
+                            currentSlide === index
+                                ? "bg-white scale-125"
+                                : "bg-white/50"
                         } transition-all duration-300`}
                     />
                 ))}
