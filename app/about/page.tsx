@@ -2,6 +2,7 @@
 
 import Navbar from "@/components/navbar";
 import { useRef } from "react";
+import Footer from "@/components/footer";
 
 function About() {
     const targetRef = useRef<HTMLDivElement>(null);
@@ -60,6 +61,8 @@ function About() {
                     </p>
                 </div>
             </div>
+
+            <Footer />
         </>
     );
 }

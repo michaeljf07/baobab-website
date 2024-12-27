@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
 
 function Contact() {
     const [name, setName] = useState("");
@@ -87,6 +88,8 @@ function Contact() {
                     Thank you for contacting us!{" "}
                 </p>
             ) : null}
+
+            <Footer />
         </>
     );
 }
