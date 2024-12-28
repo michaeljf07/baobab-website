@@ -19,38 +19,37 @@ export default function Home() {
             <Carousel onReadMoreClick={scrollToAbout} />
             <section
                 ref={aboutRef}
-                className="min-h-screen bg-teal-600 flex items-center">
-                <div className="container mx-auto flex">
-                    {/* Left half */}
-                    <div className="w-1/2 p-12 flex flex-col items-center justify-center">
-                        <h2 className="text-4xl font-bold text-white mb-8 text-center">
-                            About our Organization
-                        </h2>
-                        <p className="text-white text-lg text-center leading-relaxed">
-                            Baobab is a dedicated non-profit organization
-                            revolutionizing charitable giving through innovative
-                            online services. Our mission is to enhance the
-                            efficiency and effectiveness of donations, ensuring
-                            that your contributions make the maximum impact. By
-                            leveraging cutting-edge technology and fostering
-                            transparency, Baobab connects generous donors with
-                            worthy causes, simplifying the process of giving and
-                            ensuring that every donation counts. Join us in our
-                            commitment to creating a more charitable and
-                            connected world.
-                        </p>
-                    </div>
+                className="min-h-screen bg-teal-600 flex items-stretch">
+                {/* Left half */}
+                <div className="w-1/2 p-12 flex flex-col items-center justify-center">
+                    <h2 className="text-4xl font-bold text-white mb-8 text-center lg:text-left">
+                        About our Organization
+                    </h2>
+                    <p className="text-white text-lg text-center leading-relaxed">
+                        Baobab is a dedicated non-profit organization
+                        revolutionizing charitable giving through innovative
+                        online services. Our mission is to enhance the
+                        efficiency and effectiveness of donations, ensuring that
+                        your contributions make the maximum impact. By
+                        leveraging cutting-edge technology and fostering
+                        transparency, Baobab connects generous donors with
+                        worthy causes, simplifying the process of giving and
+                        ensuring that every donation counts. Join us in our
+                        commitment to creating a more charitable and connected
+                        world.
+                    </p>
+                </div>
 
-                    {/* Right half */}
-                    <div className="w-1/2">
-                        <img
-                            src="/home-background.jpg"
-                            alt="About our organization"
-                            className="w-full h-screen object-cover"
-                        />
-                    </div>
+                {/* Right half */}
+                <div className="w-1/2 flex items-center justify-center">
+                    <img
+                        src="/home-background.jpg"
+                        alt="About our organization"
+                        className="w-full h-full object-cover"
+                    />
                 </div>
             </section>
+
             <section className="py-16 bg-white">
                 <h2 className="text-5xl font-bold text-center text-black mb-12">
                     Ready to Make a Difference?
