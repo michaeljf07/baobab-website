@@ -89,6 +89,7 @@ const Carousel = ({ onReadMoreClick }: CarouselProps) => {
                 onClick={prevSlide}
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-20">
                 <svg
+                    xmlns="http://www.w3.org/2000/svg"
                     className="h-12 w-12"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -105,6 +106,7 @@ const Carousel = ({ onReadMoreClick }: CarouselProps) => {
                 onClick={nextSlide}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-20">
                 <svg
+                    xmlns="http://www.w3.org/2000/svg"
                     className="h-12 w-12"
                     fill="none"
                     viewBox="0 0 24 24"
