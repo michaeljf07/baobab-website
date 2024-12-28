@@ -61,38 +61,14 @@ function Navbar() {
                     </Link>
                 </div>
                 <div className="flex items-center mr-12 relative">
-                    {isSignedIn ? (
-                        <div className="relative">
-                            <img
-                                src={profilePicture}
-                                alt="Profile"
-                                className="w-12 h-12 rounded-full cursor-pointer"
-                                onClick={toggleDropdown}
-                            />
-                            {isDropdownOpen && (
-                                <div className="absolute text-center right-0 mt-2 w-28 bg-white border rounded shadow-md z-50">
-                                    <Link
-                                        href="/profile"
-                                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                        Profile
-                                    </Link>
-                                    <button
-                                        onClick={() => {
-                                            setIsSignedIn(false);
-                                            setIsDropdownOpen(false);
-                                        }}
-                                        className="block w-full text-center px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                        Logout
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    ) : (
-                        <button
-                            onClick={() => setIsSignedIn(true)}
-                            className="bg-cyan-600 text-white px-4 py-2 rounded hover:bg-amber-500 h-12 flex items-center justify-center">
-                            Sign In
-                        </button>
+                    {isSignedIn ? null : (
+                        <Link href="/auth">
+                            <button
+                                onClick={() => setIsSignedIn(true)}
+                                className="bg-cyan-600 text-white px-4 py-2 rounded hover:bg-amber-500 h-12 flex items-center justify-center">
+                                Sign In
+                            </button>
+                        </Link>
                     )}
                 </div>
             </div>

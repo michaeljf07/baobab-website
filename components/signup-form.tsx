@@ -56,7 +56,7 @@ function SignUp() {
                         placeholder="Password"
                         className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
                         value={password}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
                     <input
                         type="submit"

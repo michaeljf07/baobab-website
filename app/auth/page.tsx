@@ -6,6 +6,7 @@ import Footer from "@/components/footer";
 function Login() {
     return (
         <div>
+            <title>Authentication</title>
             <Navbar />
             <SignUp />
             <Footer />
