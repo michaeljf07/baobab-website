@@ -1,29 +1,53 @@
 "use client";
 
-import { FormEvent } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { signIn, useSession } from "next-auth/react";
 
 function SignIn() {
+    const [error, setError] = useState("");
     const router = useRouter();
+    const session = useSession();
+
+    useEffect(() => {
+        if (session.status === "authenticated") {
+            router.replace("/wishlists");
+        }
+    }, [session, router]);
+
+    const isValidEmail = (email: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
-        const email = formData.get("email");
-        const password = formData.get("password");
+        const email = String(formData.get("email"));
+        const password = String(formData.get("password"));
 
-        const response = await fetch("/api/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
+        if (!isValidEmail(email)) {
+            setError("Email is invalid");
+            return;
+        }
+
+        if (!password || password.length < 6) {
+            setError("Password is invalid");
+        }
+
+        const res = await signIn("credentials", {
+            redirect: false,
+            email,
+            password,
         });
 
-        if (response.ok) {
-            router.push("/profile");
+        if (res?.error) {
+            setError("Invalid email or password");
+            if (res?.url) router.replace("/wishlists");
         } else {
-            alert("Failed to sign up.");
+            setError("");
         }
     }
 
@@ -54,6 +78,9 @@ function SignIn() {
                         value="Login"
                         className="block w-2/5 text-center bg-cyan-600 text-white px-4 py-3 mx-auto cursor-pointer hover:bg-amber-500 rounded-xl"
                     />
+                    <p className="block text-center text-red-600 mx-auto">
+                        {error && error}
+                    </p>
                 </form>
                 <div className="text-center mx-auto">
                     <p className="inline-block">

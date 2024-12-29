@@ -40,12 +40,12 @@ function SignUp() {
                 body: JSON.stringify({ charityName, email, password }),
             });
 
-            if (res.status === 400) {
+            if (res.status === 409) {
                 setError("Email is already in use");
             }
-            if (res.status === 200) {
+            if (res.ok) {
                 setError("");
-                router.push("/account/signin");
+                router.push("/wishlists");
             }
         } catch (error) {
             setError("Error, try again.");
