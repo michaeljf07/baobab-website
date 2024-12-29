@@ -57,7 +57,7 @@ function SignUp() {
             <div className="my-20 mx-auto flex-1 items-start justify-center space-x-4 w-1/3 h-auto py-16 px-8 rounded-3xl bg-slate-200 shadow-lg">
                 <h1 className="text-5xl font-bold text-center pb-4">SIGN UP</h1>
                 <p className="text-center font-normal">
-                    Make a profile to create wishlists
+                    ONLY FOR CHARITIES. Donors do not require accounts.
                 </p>
                 <form className="space-y-6 py-6" onSubmit={handleSubmit}>
                     <input
