@@ -1,5 +1,4 @@
 import SignIn from "@/components/signin-form";
-import SignUp from "@/components/signup-form";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 
@@ -8,7 +7,7 @@ function Login() {
         <div>
             <title>Authentication</title>
             <Navbar />
-            <SignUp />
+            <SignIn />
             <Footer />
         </div>
     );

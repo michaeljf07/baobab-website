@@ -1,25 +1,57 @@
 "use client";
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 function SignUp() {
-    const [firstname, setFirstName] = useState("");
-    const [lastname, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [submitted, setSubmitted] = useState(false);
+    const [error, setError] = useState("");
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const router = useRouter();
 
-        const formData = {
-            firstname,
-            lastname,
-            email,
-            password,
-        };
+    const isValidEmail = (email: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
     };
 
+    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+
+        const formData = new FormData(event.currentTarget);
+        const charityName = String(formData.get("charityname"));
+        const email = String(formData.get("email"));
+        const password = String(formData.get("password"));
+
+        if (!isValidEmail(email)) {
+            setError("Email is invalid");
+            return;
+        }
+
+        if (!password || password.length < 6) {
+            setError("Password is invalid");
+        }
+
+        try {
+            const res = await fetch("/api/auth", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ charityName, email, password }),
+            });
+
+            if (res.status === 400) {
+                setError("Email is already in use");
+            }
+            if (res.status === 200) {
+                setError("");
+                router.push("/account/signin");
+            }
+        } catch (error) {
+            setError("Error, try again.");
+            console.log(error);
+        }
+    }
     return (
         <>
             <div className="my-20 mx-auto flex-1 items-start justify-center space-x-4 w-1/3 h-auto py-16 px-8 rounded-3xl bg-slate-200 shadow-lg">
@@ -29,41 +61,44 @@ function SignUp() {
                 </p>
                 <form className="space-y-6 py-6" onSubmit={handleSubmit}>
                     <input
-                        name="firstname"
-                        placeholder="First Name"
+                        name="charityname"
+                        placeholder="Charity Name"
                         className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
-                        value={firstname}
-                        onChange={(e) => setFirstName(e.target.value)}
-                    />
-                    <input
-                        name="lastname"
-                        placeholder="Last Name"
-                        className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
-                        value={lastname}
-                        onChange={(e) => setLastName(e.target.value)}
+                        required
                     />
                     <input
                         type="email"
                         name="email"
                         placeholder="Email"
                         className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        required
                     />
                     <input
                         type="password"
                         name="password"
                         placeholder="Password"
                         className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        required
                     />
                     <input
                         type="submit"
                         value="Create Account"
                         className="block w-2/5 text-center bg-cyan-600 text-white px-4 py-3 mx-auto cursor-pointer hover:bg-amber-500 rounded-xl"
                     />
+                    <p className="block text-center text-red-600 mx-auto">
+                        {error && error}
+                    </p>
                 </form>
+                <div className="text-center mx-auto">
+                    <p className="inline-block">
+                        Already have an account?{" "}
+                        <Link
+                            href="/account/signin"
+                            className="text-sky-500 underline">
+                            Sign In
+                        </Link>
+                    </p>
+                </div>
             </div>
         </>
     );

@@ -1,20 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 function SignIn() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [submitted, setSubmitted] = useState(false);
+    const router = useRouter();
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
 
-        const formData = {
-            email,
-            password,
-        };
-    };
+        const formData = new FormData(event.currentTarget);
+        const email = formData.get("email");
+        const password = formData.get("password");
+
+        const response = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+        });
+
+        if (response.ok) {
+            router.push("/profile");
+        } else {
+            alert("Failed to sign up.");
+        }
+    }
 
     return (
         <>
@@ -29,16 +40,14 @@ function SignIn() {
                         name="email"
                         placeholder="Email"
                         className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        required
                     />
                     <input
                         type="password"
                         name="password"
                         placeholder="Password"
                         className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
-                        value={password}
-                        onChange={(e) => setEmail(e.target.value)}
+                        required
                     />
                     <input
                         type="submit"
@@ -46,6 +55,16 @@ function SignIn() {
                         className="block w-2/5 text-center bg-cyan-600 text-white px-4 py-3 mx-auto cursor-pointer hover:bg-amber-500 rounded-xl"
                     />
                 </form>
+                <div className="text-center mx-auto">
+                    <p className="inline-block">
+                        Don't have an account?{" "}
+                        <Link
+                            href="/account/signup"
+                            className="text-sky-500 underline">
+                            Sign Up
+                        </Link>
+                    </p>
+                </div>
             </div>
         </>
     );

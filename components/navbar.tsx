@@ -5,12 +5,12 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 function Navbar() {
-    const pathname = usePathname();
-    const [isSignedIn, setIsSignedIn] = useState(false); // Mock state for sign-in
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
+    const router = usePathname();
+    const [isSignedIn, setIsSignedIn] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const profilePicture = "/logo.png";
 
-    const isActive = (path: string) => pathname === path;
+    const isActive = (path: string) => router === path;
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
@@ -21,7 +21,7 @@ function Navbar() {
             <div className="flex items-center w-full justify-between">
                 <div className="flex space-x-12 items-center ml-12 text-lg">
                     <Link href="/">
-                        <img src="logo.png" className="w-14 rounded-md" />
+                        <img src="/logo.png" className="w-14 rounded-md" />
                     </Link>
                     <Link
                         href="/"
@@ -61,15 +61,19 @@ function Navbar() {
                     </Link>
                 </div>
                 <div className="flex items-center mr-12 relative">
-                    {isSignedIn ? null : (
-                        <Link href="/auth">
+                    {!isSignedIn &&
+                    !(
+                        isActive("/account/signin") ||
+                        isActive("/account/signup")
+                    ) ? (
+                        <Link href="/account/signin">
                             <button
                                 onClick={() => setIsSignedIn(true)}
                                 className="bg-cyan-600 text-white px-4 py-2 rounded hover:bg-amber-500 h-12 flex items-center justify-center">
                                 Sign In
                             </button>
                         </Link>
-                    )}
+                    ) : null}
                 </div>
             </div>
         </nav>
