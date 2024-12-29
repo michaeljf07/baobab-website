@@ -12,6 +12,7 @@ function About() {
     };
     return (
         <>
+            <title>About Us - Baobab</title>
             <Navbar />
             <div>
                 <img

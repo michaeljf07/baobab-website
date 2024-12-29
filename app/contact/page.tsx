@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState } from "react";
+import { FormEvent } from "react";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 
@@ -11,22 +12,22 @@ function Contact() {
     const [message, setMessage] = useState("");
     const [submitted, setSubmitted] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const formData = {
-            name,
-            email,
-            phoneNumber,
-            message,
-        };
+        const formData = new FormData(e.currentTarget);
+
+        const name = formData.get("name");
+        const email = formData.get("email");
+        const phoneNumber = formData.get("phone-number");
+        const message = formData.get("message");
 
         const response = await fetch("/api/emails", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify({ name, email, phoneNumber, message }),
         });
 
         if (response.ok) {
@@ -38,8 +39,9 @@ function Contact() {
 
     return (
         <>
+            <title>Contact Us - Baobab</title>
             <Navbar />
-            <div className="mt-20 mx-auto flex-1 items-start justify-center space-x-4 w-1/3 h-auto py-16 px-8 rounded-3xl bg-slate-200 shadow-lg">
+            <div className="my-20 mx-auto flex-1 items-start justify-center space-x-4 w-1/3 h-auto py-16 px-8 rounded-3xl bg-slate-200 shadow-lg">
                 <h1 className="text-5xl font-bold text-center pb-4">
                     CONTACT US
                 </h1>
@@ -51,29 +53,21 @@ function Contact() {
                         name="name"
                         placeholder="Name"
                         className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
                     />
                     <input
                         type="email"
                         name="email"
                         placeholder="Email"
                         className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
                     />
                     <input
                         name="phone-number"
                         placeholder="Phone Number"
                         className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
                     />
                     <textarea
                         placeholder="Message"
                         className="block mt-10 h-24 w-full border-b-2 border-orange-950 p-2 bg-transparent"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
                     />
                     <input
                         type="submit"
