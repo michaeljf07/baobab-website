@@ -6,10 +6,6 @@ import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 
 function Contact() {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [message, setMessage] = useState("");
     const [submitted, setSubmitted] = useState(false);
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -32,8 +28,10 @@ function Contact() {
 
         if (response.ok) {
             alert("Message sent successfully!");
+            setSubmitted(true);
         } else {
             alert("Failed to send message.");
+            setSubmitted(false);
         }
     };
 
@@ -81,7 +79,12 @@ function Contact() {
                     {" "}
                     Thank you for contacting us!{" "}
                 </p>
-            ) : null}
+            ) : (
+                <p className="text-center font-bold text-xl text-black my-12">
+                    {" "}
+                    There was an error sending your message.{" "}
+                </p>
+            )}
 
             <Footer />
         </>

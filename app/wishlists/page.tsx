@@ -1,26 +1,51 @@
 "use client";
 
 import Navbar from "@/components/navbar";
-import charities from "@/example_data/charities.json";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+interface Charity {
+    _id: string;
+    charityName: string;
+    description: string;
+    image: string;
+}
 
 function Wishlists() {
+    const [charities, setCharities] = useState<Charity[]>([]);
+    const [filteredCharities, setFilteredCharities] = useState<Charity[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [filteredCharities, setFilteredCharities] = useState(charities);
 
-    const handleSearch = () => {
+    async function fetchUsers() {
+        try {
+            const response = await fetch("/api/users", { method: "GET" });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log(data.users);
+            setCharities(data.users);
+            setFilteredCharities(data.users);
+        } catch (error) {
+            console.error("Failed to fetch charities:", error);
+        }
+    }
+
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    function handleSearch() {
         const results = charities.filter((charity) =>
-            charity.name.toLowerCase().includes(searchTerm.toLowerCase())
+            charity.charityName.toLowerCase().includes(searchTerm.toLowerCase())
         );
         setFilteredCharities(results);
-    };
+    }
 
     return (
         <>
             <Navbar />
             <h1 className="text-3xl font-bold text-center">Wishlists</h1>
             <div className="px-6 py-4">
-                {/* Search Bar with Button */}
                 <div className="my-6 flex justify-center">
                     <div className="relative w-1/3">
                         <input
@@ -42,15 +67,15 @@ function Wishlists() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mx-auto max-w-7xl">
                     {filteredCharities.map((charity) => (
                         <div
-                            key={charity.id}
+                            key={charity._id}
                             className="bg-white border rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105">
                             <img
-                                src={charity.imageUrl}
-                                alt={charity.name}
+                                src={charity.image}
+                                alt={charity.charityName}
                                 className="w-full h-32 object-cover rounded-md mb-4"
                             />
                             <h3 className="text-lg font-semibold mb-2">
-                                {charity.name}
+                                {charity.charityName}
                             </h3>
                             <p className="text-sm text-gray-600">
                                 {charity.description}
@@ -59,7 +84,6 @@ function Wishlists() {
                     ))}
                 </div>
 
-                {/* No Results Message */}
                 {filteredCharities.length === 0 && (
                     <p className="text-center text-gray-500 mt-4">
                         No charities found.
