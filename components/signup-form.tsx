@@ -19,6 +19,7 @@ function SignUp() {
 
         const formData = new FormData(event.currentTarget);
         const charityName = String(formData.get("charityname"));
+        const registrationNumber = String(formData.get("Registration Number"));
         const email = String(formData.get("email"));
         const password = String(formData.get("password"));
 
@@ -37,7 +38,12 @@ function SignUp() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ charityName, email, password }),
+                body: JSON.stringify({
+                    charityName,
+                    registrationNumber,
+                    email,
+                    password,
+                }),
             });
 
             if (res.status === 409) {
@@ -63,6 +69,12 @@ function SignUp() {
                     <input
                         name="charityname"
                         placeholder="Charity Name"
+                        className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
+                        required
+                    />
+                    <input
+                        name="Registration Number"
+                        placeholder="Registration Number"
                         className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
                         required
                     />
