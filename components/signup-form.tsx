@@ -23,7 +23,8 @@ function SignUp() {
         const email = String(formData.get("email"));
         const password = String(formData.get("password"));
         const description = String(formData.get("desription"));
-        const imageLink = String(formData.get("image-link"));
+        const imageLink =
+            "https://archive.org/download/instagram-plain-round/instagram%20dip%20in%20hair.jpg"; // default profile picture
 
         if (!isValidEmail(email)) {
             setError("Email is invalid");
@@ -99,12 +100,6 @@ function SignUp() {
                     <input
                         name="desription"
                         placeholder="Your One Line Description"
-                        className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
-                        required
-                    />
-                    <input
-                        name="image-link"
-                        placeholder="Image Link (for now)"
                         className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
                         required
                     />

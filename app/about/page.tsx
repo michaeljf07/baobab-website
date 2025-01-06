@@ -1,8 +1,6 @@
 "use client";
 
-import Navbar from "@/components/navbar";
 import { useRef } from "react";
-import Footer from "@/components/footer";
 
 function About() {
     const targetRef = useRef<HTMLDivElement>(null);
@@ -13,7 +11,6 @@ function About() {
     return (
         <>
             <title>About Us - Baobab</title>
-            <Navbar />
             <div>
                 <img
                     src="about-us-background.png"
@@ -62,8 +59,6 @@ function About() {
                     </p>
                 </div>
             </div>
-
-            <Footer />
         </>
     );
 }

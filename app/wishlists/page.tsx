@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/navbar";
 import { useState, useEffect } from "react";
 
 interface Charity {
@@ -43,7 +42,6 @@ function Wishlists() {
 
     return (
         <>
-            <Navbar />
             <h1 className="text-3xl font-bold text-center">Wishlists</h1>
             <div className="px-6 py-4">
                 <div className="my-6 flex justify-center">
