@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "name": "Hope Foundation",
+        "imageUrl": "https://example.com/logos/hope-foundation.png",
+        "description": "Providing shelter and resources to the homeless in urban areas."
+    },
+    {
+        "id": 2,
+        "name": "Green Earth Initiative",
+        "imageUrl": "https://example.com/logos/green-earth.png",
+        "description": "Promoting environmental sustainability and reforestation projects."
+    },
+    {
+        "id": 3,
+        "name": "Kids First Foundation",
+        "imageUrl": "https://example.com/logos/kids-first.png",
+        "description": "Ensuring access to education and nutrition for underprivileged children."
+    },
+    {
+        "id": 4,
+        "name": "Animal Rescue Alliance",
+        "imageUrl": "https://example.com/logos/animal-rescue.png",
+        "description": "Rescuing and rehabilitating stray and injured animals."
+    },
+    {
+        "id": 5,
+        "name": "Women Empowerment Network",
+        "imageUrl": "https://example.com/logos/women-empowerment.png",
+        "description": "Supporting women through education, skill development, and healthcare."
+    }
+]

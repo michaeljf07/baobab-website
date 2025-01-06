@@ -22,6 +22,9 @@ function SignUp() {
         const registrationNumber = String(formData.get("Registration Number"));
         const email = String(formData.get("email"));
         const password = String(formData.get("password"));
+        const description = String(formData.get("desription"));
+        const imageLink =
+            "https://archive.org/download/instagram-plain-round/instagram%20dip%20in%20hair.jpg"; // default profile picture
 
         if (!isValidEmail(email)) {
             setError("Email is invalid");
@@ -43,6 +46,8 @@ function SignUp() {
                     registrationNumber,
                     email,
                     password,
+                    description,
+                    imageLink,
                 }),
             });
 
@@ -51,7 +56,7 @@ function SignUp() {
             }
             if (res.ok) {
                 setError("");
-                router.push("/wishlists");
+                router.push("/account/signin");
             }
         } catch (error) {
             setError("Error, try again.");
@@ -89,6 +94,12 @@ function SignUp() {
                         type="password"
                         name="password"
                         placeholder="Password"
+                        className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
+                        required
+                    />
+                    <input
+                        name="desription"
+                        placeholder="Your One Line Description"
                         className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
                         required
                     />

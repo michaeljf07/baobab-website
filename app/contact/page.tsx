@@ -2,14 +2,8 @@
 
 import { useState } from "react";
 import { FormEvent } from "react";
-import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
 
 function Contact() {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [message, setMessage] = useState("");
     const [submitted, setSubmitted] = useState(false);
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -32,15 +26,16 @@ function Contact() {
 
         if (response.ok) {
             alert("Message sent successfully!");
+            setSubmitted(true);
         } else {
             alert("Failed to send message.");
+            setSubmitted(false);
         }
     };
 
     return (
         <>
             <title>Contact Us - Baobab</title>
-            <Navbar />
             <div className="my-20 mx-auto flex-1 items-start justify-center space-x-4 w-1/3 h-auto py-16 px-8 rounded-3xl bg-slate-200 shadow-lg">
                 <h1 className="text-5xl font-bold text-center pb-4">
                     CONTACT US
@@ -81,9 +76,12 @@ function Contact() {
                     {" "}
                     Thank you for contacting us!{" "}
                 </p>
-            ) : null}
-
-            <Footer />
+            ) : (
+                <p className="text-center font-bold text-xl text-black my-12">
+                    {" "}
+                    There was an error sending your message.{" "}
+                </p>
+            )}
         </>
     );
 }

@@ -10,7 +10,7 @@ function Navbar() {
 
     const router = usePathname();
 
-    const profilePicture = session?.user?.image || "/logo.png"; // Use session's image if available
+    const profilePicture = session?.user?.image || "/logo.png";
 
     const isActive = (path: string) => router === path;
 
