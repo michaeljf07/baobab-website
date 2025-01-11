@@ -15,7 +15,6 @@ export default function Home() {
 
     return (
         <div>
-            <Navbar />
             <Carousel onReadMoreClick={scrollToAbout} />
             <section
                 ref={aboutRef}
