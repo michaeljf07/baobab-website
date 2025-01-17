@@ -19,6 +19,7 @@ export default function Profile() {
     const [isEditing, setIsEditing] = useState(false);
     const [newCharityName, setNewCharityName] = useState("");
     const [error, setError] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         if (status === "unauthenticated") {
@@ -72,6 +73,10 @@ export default function Profile() {
             setError("Failed to update profile");
             console.error("Error updating profile:", error);
         }
+    };
+
+    const handleSearch = () => {
+        // Functionality to be added later
     };
 
     if (status === "loading") {
@@ -146,6 +151,23 @@ export default function Profile() {
                         <h2 className="text-xl font-semibold mb-2">Description</h2>
                         <p className="text-gray-700">{userData.description}</p>
                     </div>
+                </div>
+            </div>
+
+            <div className="my-6 flex justify-center">
+                <div className="relative w-1/3">
+                    <input
+                        type="text"
+                        placeholder="Search Amazon..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <button
+                        onClick={handleSearch}
+                        className="absolute right-0 top-0 bottom-0 px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Search
+                    </button>
                 </div>
             </div>
         </div>
