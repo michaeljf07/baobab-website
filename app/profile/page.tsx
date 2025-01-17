@@ -71,9 +71,13 @@ export default function Profile() {
         setIsEditing(true);
     };
 
-    const extractAsin = (url: string): string | null => {
+    const extractAsinAndDomain = (url: string): { asin: string | null; domain: string } => {
         const asinMatch = url.match(/\/([A-Z0-9]{10})(?:[/?]|$)/);
-        return asinMatch ? asinMatch[1] : null;
+        const domainMatch = url.match(/amazon\.(com|ca|co\.uk|de|fr|co\.jp|in)/i);
+        return {
+            asin: asinMatch ? asinMatch[1] : null,
+            domain: domainMatch ? domainMatch[0] : 'amazon.com'
+        };
     };
 
     const handleAddProduct = async () => {
@@ -81,8 +85,9 @@ export default function Profile() {
         setError("");
         setIsLoading(true);
         setSearchedProduct(null);
-        const asin = extractAsin(amazonUrl);
-        console.log("Extracted ASIN:", asin);
+        
+        const { asin, domain } = extractAsinAndDomain(amazonUrl);
+        console.log("Extracted ASIN:", asin, "Domain:", domain);
         
         if (!asin) {
             setError("Invalid Amazon URL");
@@ -96,7 +101,7 @@ export default function Profile() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ asin }),
+                body: JSON.stringify({ asin, domain }),
             });
             console.log("API Response status:", response.status);
             
@@ -107,6 +112,7 @@ export default function Profile() {
             const data = await response.json();
             console.log("Product data received:", data);
             const product = data.data.amazonProduct;
+            product.url = product.url.replace(/amazon\.com/, domain);
             setSearchedProduct(product);
         } catch (error) {
             console.error("Error in handleAddProduct:", error);
