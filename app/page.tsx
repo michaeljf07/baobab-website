@@ -1,10 +1,8 @@
 "use client";
 
 import Carousel from "@/components/carousel";
-import Navbar from "../components/navbar";
 import { useRef } from "react";
 import Link from "next/link";
-import Footer from "@/components/footer";
 
 export default function Home() {
     const aboutRef = useRef<HTMLElement>(null);
@@ -15,7 +13,6 @@ export default function Home() {
 
     return (
         <div>
-            <Navbar />
             <Carousel onReadMoreClick={scrollToAbout} />
             <section
                 ref={aboutRef}
@@ -62,8 +59,6 @@ export default function Home() {
                     </Link>
                 </div>
             </section>
-
-            <Footer />
         </div>
     );
 }
