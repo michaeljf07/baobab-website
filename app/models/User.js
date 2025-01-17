@@ -31,6 +31,23 @@ const userSchema = new Schema(
             type: String,
             required: true,
         },
+        wishlist: {
+            type: [{
+                title: String,
+                brand: String,
+                mainImageUrl: String,
+                rating: Number,
+                url: String,
+                price: {
+                    display: String
+                },
+                dateAdded: {
+                    type: Date,
+                    default: Date.now
+                }
+            }],
+            default: []
+        }
     },
     { timestamps: true }
 );

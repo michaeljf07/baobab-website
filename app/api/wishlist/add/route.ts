@@ -5,7 +5,7 @@ import connect from "@/utils/db";
 import User from "@/models/User";
 import { Session } from "next-auth";
 
-export async function PUT(request: Request) {
+export async function POST(request: Request) {
     try {
         const session = await getServerSession(authOptions) as Session;
         
@@ -16,28 +16,28 @@ export async function PUT(request: Request) {
             );
         }
 
-        const { charityName } = await request.json();
+        const product = await request.json();
         
         await connect();
 
         const updatedUser = await User.findOneAndUpdate(
             { email: session.user.email },
-            { charityName },
+            { $push: { wishlist: { ...product, dateAdded: new Date() } } },
             { new: true }
-        ).select([
-            "charityName",
-            "registrationNumber",
-            "email",
-            "description",
-            "image",
-            "wishlist"
-        ]);
+        );
 
-        return NextResponse.json(updatedUser);
+        if (!updatedUser) {
+            return NextResponse.json(
+                { error: "User not found" },
+                { status: 404 }
+            );
+        }
+
+        return NextResponse.json({ success: true });
     } catch (error) {
-        console.error("Profile update error:", error);
+        console.error("Add to wishlist error:", error);
         return NextResponse.json(
-            { error: "Failed to update profile" },
+            { error: "Failed to add item to wishlist" },
             { status: 500 }
         );
     }

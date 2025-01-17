@@ -1,12 +1,24 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 interface Charity {
     _id: string;
     charityName: string;
     description: string;
     image: string;
+    wishlist?: {
+        title: string;
+        brand: string;
+        mainImageUrl: string;
+        rating: number;
+        url: string;
+        price: {
+            display: string;
+        };
+        dateAdded: string;
+    }[];
 }
 
 function Wishlists() {
@@ -64,21 +76,21 @@ function Wishlists() {
                 {/* Charity Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mx-auto max-w-7xl">
                     {filteredCharities.map((charity) => (
-                        <div
-                            key={charity._id}
-                            className="bg-white border rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105">
-                            <img
-                                src={charity.image}
-                                alt={charity.charityName}
-                                className="w-full h-32 object-cover rounded-md mb-4"
-                            />
-                            <h3 className="text-lg font-semibold mb-2">
-                                {charity.charityName}
-                            </h3>
-                            <p className="text-sm text-gray-600">
-                                {charity.description}
-                            </p>
-                        </div>
+                        <Link href={`/wishlists/${charity._id}`} key={charity._id}>
+                            <div className="bg-white border rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 cursor-pointer">
+                                <img
+                                    src={charity.image}
+                                    alt={charity.charityName}
+                                    className="w-full h-32 object-cover rounded-md mb-4"
+                                />
+                                <h3 className="text-lg font-semibold mb-2">
+                                    {charity.charityName}
+                                </h3>
+                                <p className="text-sm text-gray-600">
+                                    {charity.description}
+                                </p>
+                            </div>
+                        </Link>
                     ))}
                 </div>
 

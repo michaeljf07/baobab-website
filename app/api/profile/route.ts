@@ -24,6 +24,7 @@ export async function GET() {
             "email",
             "description",
             "image",
+            "wishlist"
         ]);
 
         if (!user) {

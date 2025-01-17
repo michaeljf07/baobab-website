@@ -144,6 +144,29 @@ export default function Profile() {
         // Functionality to be added later
     };
 
+    const handleAddToWishlist = async () => {
+        if (!searchedProduct) return;
+
+        try {
+            const response = await fetch("/api/wishlist/add", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(searchedProduct),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to add item to wishlist");
+            }
+
+            alert("Item added to wishlist successfully!");
+        } catch (error) {
+            console.error("Error adding to wishlist:", error);
+            setError("Failed to add item to wishlist");
+        }
+    };
+
     if (status === "loading") {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -258,13 +281,20 @@ export default function Profile() {
                                     <span className="text-yellow-400">★</span>
                                     <span className="ml-1">{searchedProduct.rating}</span>
                                 </div>
-                                <a
-                                    href={searchedProduct.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-block bg-cyan-600 text-white px-4 py-2 rounded hover:bg-amber-500">
-                                    View on Amazon
-                                </a>
+                                <div className="flex space-x-4">
+                                    <a
+                                        href={searchedProduct.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-block bg-cyan-600 text-white px-4 py-2 rounded hover:bg-amber-500">
+                                        View on Amazon
+                                    </a>
+                                    <button
+                                        onClick={handleAddToWishlist}
+                                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                                        Add to Wishlist
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
