@@ -15,7 +15,8 @@ export async function GET(
             "charityName",
             "description",
             "image",
-            "wishlist"
+            "wishlist",
+            "email"
         ]);
 
         if (!charity) {

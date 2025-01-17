@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 interface WishlistItem {
     title: string;
@@ -13,20 +14,46 @@ interface WishlistItem {
         display: string;
     };
     dateAdded: string;
+    _id?: string;
 }
 
 interface CharityData {
     charityName: string;
     description: string;
     image: string;
+    email: string;
     wishlist: WishlistItem[];
 }
 
 export default function CharityWishlist() {
     const params = useParams();
+    const { data: session } = useSession();
     const [charity, setCharity] = useState<CharityData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+
+    const handleDeleteItem = async (itemId: string) => {
+        try {
+            const response = await fetch(`/api/wishlists/${params.id}/items/${itemId}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete item');
+            }
+
+            setCharity(prev => {
+                if (!prev) return null;
+                return {
+                    ...prev,
+                    wishlist: prev.wishlist.filter(item => item._id !== itemId)
+                };
+            });
+        } catch (error) {
+            console.error('Error deleting item:', error);
+            setError('Failed to delete item');
+        }
+    };
 
     useEffect(() => {
         async function fetchCharityWishlist() {
@@ -80,7 +107,16 @@ export default function CharityWishlist() {
             {charity.wishlist && charity.wishlist.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {charity.wishlist.map((item, index) => (
-                        <div key={index} className="bg-white rounded-lg shadow-md p-6">
+                        <div key={index} className="bg-white rounded-lg shadow-md p-6 relative">
+                            {session?.user?.email === charity.email && item._id && (
+                                <button
+                                    onClick={() => handleDeleteItem(item._id!)}
+                                    className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                                    aria-label="Delete item"
+                                >
+                                    ×
+                                </button>
+                            )}
                             <img
                                 src={item.mainImageUrl}
                                 alt={item.title}
