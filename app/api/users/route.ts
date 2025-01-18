@@ -11,6 +11,7 @@ export async function GET() {
             "charityName",
             "description",
             "image",
+            "wishlist"
         ]);
         console.log("Fetched charities successfully");
         return NextResponse.json({ users });

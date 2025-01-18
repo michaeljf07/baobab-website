@@ -29,6 +29,7 @@ export const POST = async (request: any) => {
         password: hashedPassword,
         description,
         image,
+        wishlist: []
     });
 
     try {
