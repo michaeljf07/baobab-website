@@ -21,31 +21,10 @@ interface Charity {
     }[];
 }
 
-interface AmazonProduct {
-    title: string;
-    brand: string;
-    mainImageUrl: string;
-    rating: number;
-    url: string;
-    price: {
-        display: string;
-    };
-}
-
-interface WishlistItem extends AmazonProduct {
-    id: string;
-    dateAdded: Date;
-}
-
 function Wishlists() {
     const [charities, setCharities] = useState<Charity[]>([]);
     const [filteredCharities, setFilteredCharities] = useState<Charity[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [amazonUrl, setAmazonUrl] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState("");
-    const [searchedProduct, setSearchedProduct] =
-        useState<AmazonProduct | null>(null);
 
     async function fetchUsers() {
         try {
