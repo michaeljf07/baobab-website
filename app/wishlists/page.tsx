@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 interface Charity {
@@ -46,7 +47,8 @@ function Wishlists() {
     const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
-    const [searchedProduct, setSearchedProduct] = useState<AmazonProduct | null>(null);
+    const [searchedProduct, setSearchedProduct] =
+        useState<AmazonProduct | null>(null);
 
     async function fetchUsers() {
         try {
@@ -116,12 +118,13 @@ function Wishlists() {
     };
 
     // Content for signed-in users
-    if (session) { // TODO: change to session when done testing
+    if (session) {
+        // TODO: change to session when done testing
         return (
             <div className="bg-white min-h-screen">
                 <div className="max-w-7xl mx-auto px-4 py-8">
                     <h1 className="text-3xl font-bold mb-8">Your Wishlist</h1>
-                    
+
                     {/* Search Bar */}
                     <div className="mb-8">
                         <div className="flex gap-4">
@@ -135,14 +138,11 @@ function Wishlists() {
                             <button
                                 onClick={handleAddProduct}
                                 disabled={isLoading}
-                                className="bg-cyan-600 text-white px-6 py-3 rounded-lg hover:bg-amber-500 transition-colors disabled:bg-gray-400"
-                            >
+                                className="bg-cyan-600 text-white px-6 py-3 rounded-lg hover:bg-amber-500 transition-colors disabled:bg-gray-400">
                                 {isLoading ? "Adding..." : "Add to Wishlist"}
                             </button>
                         </div>
-                        {error && (
-                            <p className="text-red-500 mt-2">{error}</p>
-                        )}
+                        {error && <p className="text-red-500 mt-2">{error}</p>}
                     </div>
 
                     {searchedProduct && (
@@ -154,7 +154,9 @@ function Wishlists() {
                                     className="w-48 h-48 object-contain"
                                 />
                                 <div className="flex-1">
-                                    <h3 className="font-semibold mb-2">{searchedProduct.title}</h3>
+                                    <h3 className="font-semibold mb-2">
+                                        {searchedProduct.title}
+                                    </h3>
                                     <p className="text-cyan-600 font-bold mb-4">
                                         {searchedProduct.price.display}
                                     </p>
@@ -166,13 +168,17 @@ function Wishlists() {
                     {/* Wishlist Items */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {wishlistItems.map((item) => (
-                            <div key={item.id} className="border rounded-lg p-4 shadow-sm">
+                            <div
+                                key={item.id}
+                                className="border rounded-lg p-4 shadow-sm">
                                 <img
                                     src={item.mainImageUrl}
                                     alt={item.title}
                                     className="w-full h-48 object-contain mb-4"
                                 />
-                                <h3 className="font-semibold mb-2">{item.title}</h3>
+                                <h3 className="font-semibold mb-2">
+                                    {item.title}
+                                </h3>
                                 <p className="text-cyan-600 font-bold mb-2">
                                     {item.price.display}
                                 </p>
@@ -180,8 +186,7 @@ function Wishlists() {
                                     href={item.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="block text-center bg-cyan-600 text-white py-2 rounded hover:bg-amber-500 transition-colors"
-                                >
+                                    className="block text-center bg-cyan-600 text-white py-2 rounded hover:bg-amber-500 transition-colors">
                                     View on Amazon
                                 </a>
                             </div>
@@ -190,7 +195,8 @@ function Wishlists() {
 
                     {wishlistItems.length === 0 && (
                         <p className="text-gray-600 text-center">
-                            Your wishlist is empty. Add items by pasting Amazon product URLs above.
+                            Your wishlist is empty. Add items by pasting Amazon
+                            product URLs above.
                         </p>
                     )}
                 </div>
@@ -222,7 +228,9 @@ function Wishlists() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mx-auto max-w-7xl">
                     {filteredCharities.map((charity) => (
-                        <Link href={`/wishlists/${charity._id}`} key={charity._id}>
+                        <Link
+                            href={`/wishlists/${charity._id}`}
+                            key={charity._id}>
                             <div className="bg-white border rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 cursor-pointer">
                                 <img
                                     src={charity.image}
