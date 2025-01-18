@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 interface Charity {
@@ -39,12 +38,10 @@ interface WishlistItem extends AmazonProduct {
 }
 
 function Wishlists() {
-    const { data: session } = useSession();
     const [charities, setCharities] = useState<Charity[]>([]);
     const [filteredCharities, setFilteredCharities] = useState<Charity[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [amazonUrl, setAmazonUrl] = useState("");
-    const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
     const [searchedProduct, setSearchedProduct] =
@@ -75,47 +72,6 @@ function Wishlists() {
         );
         setFilteredCharities(results);
     }
-
-    const extractAsin = (url: string): string | null => {
-        const asinMatch = url.match(/\/([A-Z0-9]{10})(?:[/?]|$)/);
-        return asinMatch ? asinMatch[1] : null;
-    };
-
-    const handleAddProduct = async () => {
-        setError("");
-        setIsLoading(true);
-        setSearchedProduct(null);
-
-        const asin = extractAsin(amazonUrl);
-        if (!asin) {
-            setError("Invalid Amazon URL");
-            setIsLoading(false);
-            return;
-        }
-
-        try {
-            const response = await fetch("/api/search", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ asin }),
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to fetch product details");
-            }
-
-            const data = await response.json();
-            const product = data.data.amazonProduct;
-            setSearchedProduct(product);
-        } catch (error) {
-            setError("Failed to add product");
-            console.error("Error:", error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     return (
         <>
