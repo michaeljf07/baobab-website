@@ -5,11 +5,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 interface UserData {
+    _id: string;
     charityName: string;
     registrationNumber: string;
     email: string;
     description: string;
     image: string;
+    wishlist: WishlistItem[];
 }
 
 interface AmazonProduct {
@@ -34,11 +36,8 @@ export default function Profile() {
     const [isEditing, setIsEditing] = useState(false);
     const [newCharityName, setNewCharityName] = useState("");
     const [error, setError] = useState("");
-    const [searchTerm, setSearchTerm] = useState("");
     const [amazonUrl, setAmazonUrl] = useState("");
-    const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [errorAmazon, setErrorAmazon] = useState("");
     const [searchedProduct, setSearchedProduct] = useState<AmazonProduct | null>(null);
 
     useEffect(() => {
@@ -146,10 +145,6 @@ export default function Profile() {
         }
     };
 
-    const handleSearch = () => {
-        // Functionality to be added later
-    };
-
     const handleAddToWishlist = async () => {
         if (!searchedProduct) return;
 
@@ -175,25 +170,24 @@ export default function Profile() {
 
     const handleDeleteItem = async (itemId: string) => {
         try {
-            const response = await fetch(`/api/wishlists/${userData._id}/items/${itemId}`, {
+            const response = await fetch(`/api/wishlist/${itemId}`, {
                 method: 'DELETE',
             });
 
             if (!response.ok) {
-                throw new Error('Failed to delete item');
+                throw new Error('Failed to delete item from wishlist');
             }
 
-            // Update the local state to remove the deleted item
             setUserData(prev => {
                 if (!prev) return null;
                 return {
                     ...prev,
-                    wishlist: prev.wishlist.filter(item => item._id !== itemId)
+                    wishlist: prev.wishlist.filter(item => item.id !== itemId)
                 };
             });
         } catch (error) {
             console.error('Error deleting item:', error);
-            setError('Failed to delete item');
+            setError('Failed to delete item from wishlist');
         }
     };
 
@@ -293,10 +287,6 @@ export default function Profile() {
                         </button>
                     </div>
 
-                    {errorAmazon && (
-                        <p className="text-red-500 mb-4">{errorAmazon}</p>
-                    )}
-
                     {searchedProduct && (
                         <div className="w-full bg-gray-50 rounded-lg p-6 mt-4">
                             <div className="flex flex-col h-full">
@@ -347,9 +337,9 @@ export default function Profile() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {userData.wishlist.map((item, index) => (
                             <div key={index} className="bg-gray-50 rounded-lg p-6 relative flex flex-col h-full">
-                                {item._id && (
+                                {item.id && (
                                     <button
-                                        onClick={() => handleDeleteItem(item._id!)}
+                                        onClick={() => handleDeleteItem(item.id)}
                                         className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
                                         aria-label="Delete item">
                                         ×

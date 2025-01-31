@@ -107,7 +107,7 @@ export default function CharityWishlist() {
             {charity.wishlist && charity.wishlist.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {charity.wishlist.map((item, index) => (
-                        <div key={index} className="bg-white rounded-lg shadow-md p-6 relative">
+                        <div key={index} className="bg-white rounded-lg shadow-md p-6 relative flex flex-col h-full">
                             {session?.user?.email === charity.email && item._id && (
                                 <button
                                     onClick={() => handleDeleteItem(item._id!)}
@@ -117,25 +117,27 @@ export default function CharityWishlist() {
                                     ×
                                 </button>
                             )}
-                            <img
-                                src={item.mainImageUrl}
-                                alt={item.title}
-                                className="w-full h-48 object-contain mb-4"
-                            />
-                            <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
-                            <p className="text-gray-600 mb-2">Brand: {item.brand}</p>
-                            <p className="text-lg font-bold text-green-600 mb-2">
-                                {item.price.display}
-                            </p>
-                            <div className="flex items-center mb-4">
-                                <span className="text-yellow-400">★</span>
-                                <span className="ml-1">{item.rating}</span>
+                            <div className="flex-1">
+                                <img
+                                    src={item.mainImageUrl}
+                                    alt={item.title}
+                                    className="w-full h-48 object-contain mb-4"
+                                />
+                                <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
+                                <p className="text-gray-600 mb-2">Brand: {item.brand}</p>
+                                <p className="text-lg font-bold text-green-600 mb-2">
+                                    {item.price.display}
+                                </p>
+                                <div className="flex items-center mb-4">
+                                    <span className="text-yellow-400">★</span>
+                                    <span className="ml-1">{item.rating}</span>
+                                </div>
                             </div>
                             <a
                                 href={item.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="block text-center bg-cyan-600 text-white px-4 py-2 rounded hover:bg-amber-500">
+                                className="block text-center bg-cyan-600 text-white px-4 py-2 rounded hover:bg-amber-500 mt-auto">
                                 View on Amazon
                             </a>
                         </div>
