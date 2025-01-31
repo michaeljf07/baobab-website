@@ -73,10 +73,11 @@ function Wishlists() {
                     </div>
                 </div>
 
-                {/* Charity Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mx-auto max-w-7xl">
                     {filteredCharities.map((charity) => (
-                        <Link href={`/wishlists/${charity._id}`} key={charity._id}>
+                        <Link
+                            href={`/wishlists/${charity._id}`}
+                            key={charity._id}>
                             <div className="bg-white border rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 cursor-pointer">
                                 <img
                                     src={charity.image}
