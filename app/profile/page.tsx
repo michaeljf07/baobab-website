@@ -39,7 +39,9 @@ export default function Profile() {
     const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [errorAmazon, setErrorAmazon] = useState("");
-    const [searchedProduct, setSearchedProduct] = useState<AmazonProduct | null>(null);
+    const [searchedProduct, setSearchedProduct] =
+        useState<AmazonProduct | null>(null);
+    const [newImageUrl, setNewImageUrl] = useState("");
 
     useEffect(() => {
         if (status === "unauthenticated") {
@@ -71,12 +73,16 @@ export default function Profile() {
         setIsEditing(true);
     };
 
-    const extractAsinAndDomain = (url: string): { asin: string | null; domain: string } => {
+    const extractAsinAndDomain = (
+        url: string
+    ): { asin: string | null; domain: string } => {
         const asinMatch = url.match(/\/([A-Z0-9]{10})(?:[/?]|$)/);
-        const domainMatch = url.match(/amazon\.(com|ca|co\.uk|de|fr|co\.jp|in)/i);
+        const domainMatch = url.match(
+            /amazon\.(com|ca|co\.uk|de|fr|co\.jp|in)/i
+        );
         return {
             asin: asinMatch ? asinMatch[1] : null,
-            domain: domainMatch ? domainMatch[0] : 'amazon.com'
+            domain: domainMatch ? domainMatch[0] : "amazon.com",
         };
     };
 
@@ -85,16 +91,16 @@ export default function Profile() {
         setError("");
         setIsLoading(true);
         setSearchedProduct(null);
-        
+
         const { asin, domain } = extractAsinAndDomain(amazonUrl);
         console.log("Extracted ASIN:", asin, "Domain:", domain);
-        
+
         if (!asin) {
             setError("Invalid Amazon URL");
             setIsLoading(false);
             return;
         }
-        
+
         try {
             const response = await fetch("/api/search", {
                 method: "POST",
@@ -104,11 +110,11 @@ export default function Profile() {
                 body: JSON.stringify({ asin, domain }),
             });
             console.log("API Response status:", response.status);
-            
+
             if (!response.ok) {
                 throw new Error("Failed to fetch product details");
             }
-            
+
             const data = await response.json();
             console.log("Product data received:", data);
             const product = data.data.amazonProduct;
@@ -123,13 +129,21 @@ export default function Profile() {
     };
 
     const handleSave = async () => {
+        if (newImageUrl === "") {
+            setNewImageUrl(
+                "https://archive.org/download/instagram-plain-round/instagram%20dip%20in%20hair.jpg"
+            );
+        }
         try {
             const response = await fetch("/api/profile/update", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ charityName: newCharityName }),
+                body: JSON.stringify({
+                    charityName: newCharityName,
+                    image: newImageUrl,
+                }),
             });
 
             if (!response.ok) {
@@ -189,18 +203,23 @@ export default function Profile() {
         <div className="max-w-4xl mx-auto py-12 px-4">
             <div className="bg-white rounded-lg shadow-lg p-8">
                 <div className="flex items-center space-x-6 mb-8">
-                    <img
-                        src={userData.image}
-                        alt={userData.charityName}
-                        className="w-32 h-32 rounded-full object-cover"
-                    />
+                    <div className="relative group w-48 h-32">
+                        <img
+                            src={userData.image}
+                            alt={userData.charityName}
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+
                     <div className="flex-1">
                         {isEditing ? (
                             <div className="flex items-center gap-4">
                                 <input
                                     type="text"
                                     value={newCharityName}
-                                    onChange={(e) => setNewCharityName(e.target.value)}
+                                    onChange={(e) =>
+                                        setNewCharityName(e.target.value)
+                                    }
                                     className="text-3xl font-bold border-2 border-gray-300 rounded px-2 py-1"
                                 />
                                 <button
@@ -219,7 +238,9 @@ export default function Profile() {
                             </div>
                         ) : (
                             <div className="flex items-center gap-4">
-                                <h1 className="text-3xl font-bold">{userData.charityName}</h1>
+                                <h1 className="text-3xl font-bold">
+                                    {userData.charityName}
+                                </h1>
                                 <button
                                     onClick={handleEdit}
                                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
@@ -230,21 +251,43 @@ export default function Profile() {
                         <p className="text-gray-600">{userData.email}</p>
                     </div>
                 </div>
-                
-                {error && (
-                    <p className="text-red-500 mb-4">{error}</p>
-                )}
+
+                {error && <p className="text-red-500 mb-4">{error}</p>}
 
                 <div className="space-y-6">
                     <div>
-                        <h2 className="text-xl font-semibold mb-2">Registration Number</h2>
-                        <p className="text-gray-700">{userData.registrationNumber}</p>
+                        <h2 className="text-xl font-semibold mb-2">
+                            Registration Number
+                        </h2>
+                        <p className="text-gray-700">
+                            {userData.registrationNumber}
+                        </p>
                     </div>
-                    
+
                     <div>
-                        <h2 className="text-xl font-semibold mb-2">Description</h2>
+                        <h2 className="text-xl font-semibold mb-2">
+                            Description
+                        </h2>
                         <p className="text-gray-700">{userData.description}</p>
                     </div>
+                </div>
+
+                <div className="my-6">
+                    <h2 className="text-xl font-semibold mb-2">
+                        Profile Image
+                    </h2>
+                    <input
+                        type="text"
+                        placeholder="Paste image URL..."
+                        value={newImageUrl}
+                        onChange={(e) => setNewImageUrl(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <button
+                        onClick={handleSave}
+                        className="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Save Image
+                    </button>
                 </div>
             </div>
 
@@ -278,14 +321,20 @@ export default function Profile() {
                                 className="w-48 h-48 object-contain"
                             />
                             <div className="flex-1">
-                                <h3 className="text-xl font-semibold mb-2">{searchedProduct.title}</h3>
-                                <p className="text-gray-600 mb-2">Brand: {searchedProduct.brand}</p>
+                                <h3 className="text-xl font-semibold mb-2">
+                                    {searchedProduct.title}
+                                </h3>
+                                <p className="text-gray-600 mb-2">
+                                    Brand: {searchedProduct.brand}
+                                </p>
                                 <p className="text-lg font-bold text-green-600 mb-2">
                                     {searchedProduct.price.display}
                                 </p>
                                 <div className="flex items-center mb-4">
                                     <span className="text-yellow-400">★</span>
-                                    <span className="ml-1">{searchedProduct.rating}</span>
+                                    <span className="ml-1">
+                                        {searchedProduct.rating}
+                                    </span>
                                 </div>
                                 <div className="flex space-x-4">
                                     <a
