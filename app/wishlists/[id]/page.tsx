@@ -20,6 +20,7 @@ interface WishlistItem {
 interface CharityData {
     charityName: string;
     description: string;
+    address: string;
     image: string;
     email: string;
     wishlist: WishlistItem[];
@@ -34,24 +35,29 @@ export default function CharityWishlist() {
 
     const handleDeleteItem = async (itemId: string) => {
         try {
-            const response = await fetch(`/api/wishlists/${params.id}/items/${itemId}`, {
-                method: 'DELETE',
-            });
+            const response = await fetch(
+                `/api/wishlists/${params.id}/items/${itemId}`,
+                {
+                    method: "DELETE",
+                }
+            );
 
             if (!response.ok) {
-                throw new Error('Failed to delete item');
+                throw new Error("Failed to delete item");
             }
 
-            setCharity(prev => {
+            setCharity((prev) => {
                 if (!prev) return null;
                 return {
                     ...prev,
-                    wishlist: prev.wishlist.filter(item => item._id !== itemId)
+                    wishlist: prev.wishlist.filter(
+                        (item) => item._id !== itemId
+                    ),
                 };
             });
         } catch (error) {
-            console.error('Error deleting item:', error);
-            setError('Failed to delete item');
+            console.error("Error deleting item:", error);
+            setError("Failed to delete item");
         }
     };
 
@@ -87,7 +93,9 @@ export default function CharityWishlist() {
     if (error || !charity) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                <div className="text-xl text-red-500">{error || "Charity not found"}</div>
+                <div className="text-xl text-red-500">
+                    {error || "Charity not found"}
+                </div>
             </div>
         );
     }
@@ -100,30 +108,43 @@ export default function CharityWishlist() {
                     alt={charity.charityName}
                     className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
                 />
-                <h1 className="text-3xl font-bold mb-4">{charity.charityName}</h1>
+                <h1 className="text-3xl font-bold mb-4">
+                    {charity.charityName}
+                </h1>
+                <h2 className="text-2xl font-semibold mb-2">
+                    {charity.address}
+                </h2>
                 <p className="text-gray-600 mb-8">{charity.description}</p>
             </div>
 
             {charity.wishlist && charity.wishlist.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {charity.wishlist.map((item, index) => (
-                        <div key={index} className="bg-white rounded-lg shadow-md p-6 relative">
-                            {session?.user?.email === charity.email && item._id && (
-                                <button
-                                    onClick={() => handleDeleteItem(item._id!)}
-                                    className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-                                    aria-label="Delete item"
-                                >
-                                    ×
-                                </button>
-                            )}
+                        <div
+                            key={index}
+                            className="bg-white rounded-lg shadow-md p-6 relative">
+                            {session?.user?.email === charity.email &&
+                                item._id && (
+                                    <button
+                                        onClick={() =>
+                                            handleDeleteItem(item._id!)
+                                        }
+                                        className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                                        aria-label="Delete item">
+                                        ×
+                                    </button>
+                                )}
                             <img
                                 src={item.mainImageUrl}
                                 alt={item.title}
                                 className="w-full h-48 object-contain mb-4"
                             />
-                            <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
-                            <p className="text-gray-600 mb-2">Brand: {item.brand}</p>
+                            <h3 className="text-lg font-semibold mb-2">
+                                {item.title}
+                            </h3>
+                            <p className="text-gray-600 mb-2">
+                                Brand: {item.brand}
+                            </p>
                             <p className="text-lg font-bold text-green-600 mb-2">
                                 {item.price.display}
                             </p>
@@ -142,8 +163,10 @@ export default function CharityWishlist() {
                     ))}
                 </div>
             ) : (
-                <p className="text-center text-gray-500">No items in wishlist yet.</p>
+                <p className="text-center text-gray-500">
+                    No items in wishlist yet.
+                </p>
             )}
         </div>
     );
-} 
+}
