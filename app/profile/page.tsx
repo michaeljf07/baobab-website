@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 interface UserData {
     charityName: string;
     registrationNumber: string;
+    address: string;
     email: string;
     description: string;
     image: string;
@@ -262,6 +263,11 @@ export default function Profile() {
                         <p className="text-gray-700">
                             {userData.registrationNumber}
                         </p>
+                    </div>
+
+                    <div>
+                        <h2 className="text-xl font-semibold mb-2">Address</h2>
+                        <p className="text-gray-700">{userData.address}</p>
                     </div>
 
                     <div>

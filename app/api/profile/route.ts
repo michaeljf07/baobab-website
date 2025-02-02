@@ -7,8 +7,8 @@ import { Session } from "next-auth";
 
 export async function GET() {
     try {
-        const session = await getServerSession(authOptions) as Session;
-        
+        const session = (await getServerSession(authOptions)) as Session;
+
         if (!session?.user?.email) {
             return NextResponse.json(
                 { error: "Not authenticated" },
@@ -21,10 +21,11 @@ export async function GET() {
         const user = await User.findOne({ email: session.user.email }).select([
             "charityName",
             "registrationNumber",
+            "address",
             "email",
             "description",
             "image",
-            "wishlist"
+            "wishlist",
         ]);
 
         if (!user) {
@@ -42,4 +43,4 @@ export async function GET() {
             { status: 500 }
         );
     }
-} 
+}

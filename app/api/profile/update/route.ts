@@ -34,6 +34,7 @@ export async function PUT(request: Request) {
         ).select([
             "charityName",
             "registrationNumber",
+            "address",
             "email",
             "description",
             "image",
