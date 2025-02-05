@@ -337,14 +337,12 @@ export default function Profile() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {userData.wishlist.map((item, index) => (
                             <div key={index} className="bg-gray-50 rounded-lg p-6 relative flex flex-col h-full">
-                                {item.id && (
-                                    <button
-                                        onClick={() => handleDeleteItem(item.id)}
-                                        className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-                                        aria-label="Delete item">
-                                        ×
-                                    </button>
-                                )}
+                                <button
+                                    onClick={() => handleDeleteItem(item.id)}
+                                    className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                                    aria-label="Delete item">
+                                    ×
+                                </button>
                                 <div className="flex-1">
                                     <img
                                         src={item.mainImageUrl}
