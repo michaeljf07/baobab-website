@@ -10,8 +10,10 @@
     "migrate:wishlist": "ts-node --project scripts/tsconfig.json scripts/addWishlistField.ts"
   },
   "dependencies": {
+    "@types/multer": "^1.4.12",
     "bcryptjs": "^2.4.3",
     "mongoose": "^8.9.2",
+    "multer": "^1.4.5-lts.1",
     "next": "15.1.2",
     "next-auth": "^4.24.11",
     "nodemailer": "^6.9.16",

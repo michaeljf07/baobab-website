@@ -7,7 +7,7 @@ export async function GET(
     context: { params: { id: string } }
 ) {
     const { id } = await context.params;
-    
+
     try {
         await connect();
 
@@ -15,8 +15,9 @@ export async function GET(
             "charityName",
             "description",
             "image",
+            "address",
             "wishlist",
-            "email"
+            "email",
         ]);
 
         if (!charity) {
@@ -34,4 +35,4 @@ export async function GET(
             { status: 500 }
         );
     }
-} 
+}

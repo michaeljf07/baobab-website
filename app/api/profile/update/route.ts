@@ -7,8 +7,8 @@ import { Session } from "next-auth";
 
 export async function PUT(request: Request) {
     try {
-        const session = await getServerSession(authOptions) as Session;
-        
+        const session = (await getServerSession(authOptions)) as Session;
+
         if (!session?.user?.email) {
             return NextResponse.json(
                 { error: "Not authenticated" },
@@ -16,21 +16,29 @@ export async function PUT(request: Request) {
             );
         }
 
-        const { charityName } = await request.json();
-        
+        const { charityName, image } = await request.json();
+
+        if (image && !/^https?:\/\/[^\s]+$/.test(image)) {
+            return NextResponse.json(
+                { error: "Invalid image URL" },
+                { status: 400 }
+            );
+        }
+
         await connect();
 
         const updatedUser = await User.findOneAndUpdate(
             { email: session.user.email },
-            { charityName },
+            { charityName, image },
             { new: true }
         ).select([
             "charityName",
             "registrationNumber",
+            "address",
             "email",
             "description",
             "image",
-            "wishlist"
+            "wishlist",
         ]);
 
         return NextResponse.json(updatedUser);
@@ -41,4 +49,4 @@ export async function PUT(request: Request) {
             { status: 500 }
         );
     }
-} 
+}
