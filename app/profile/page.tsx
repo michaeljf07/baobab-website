@@ -43,7 +43,6 @@ export default function Profile() {
     const [searchedProduct, setSearchedProduct] =
         useState<AmazonProduct | null>(null);
     const [newImageUrl, setNewImageUrl] = useState("");
-    const [searchedProduct, setSearchedProduct] = useState<AmazonProduct | null>(null);
 
     useEffect(() => {
         if (status === "unauthenticated") {
@@ -188,23 +187,25 @@ export default function Profile() {
     const handleDeleteItem = async (itemId: string) => {
         try {
             const response = await fetch(`/api/wishlist/${itemId}`, {
-                method: 'DELETE',
+                method: "DELETE",
             });
 
             if (!response.ok) {
-                throw new Error('Failed to delete item from wishlist');
+                throw new Error("Failed to delete item from wishlist");
             }
 
-            setUserData(prev => {
+            setUserData((prev) => {
                 if (!prev) return null;
                 return {
                     ...prev,
-                    wishlist: prev.wishlist.filter(item => item.id !== itemId)
+                    wishlist: prev.wishlist.filter(
+                        (item) => item.id !== itemId
+                    ),
                 };
             });
         } catch (error) {
-            console.error('Error deleting item:', error);
-            setError('Failed to delete item from wishlist');
+            console.error("Error deleting item:", error);
+            setError("Failed to delete item from wishlist");
         }
     };
 
@@ -349,14 +350,22 @@ export default function Profile() {
                                     />
                                     <div className="flex-1 flex flex-col h-full">
                                         <div className="flex-1">
-                                            <h3 className="text-xl font-semibold mb-2">{searchedProduct.title}</h3>
-                                            <p className="text-gray-600 mb-2">Brand: {searchedProduct.brand}</p>
+                                            <h3 className="text-xl font-semibold mb-2">
+                                                {searchedProduct.title}
+                                            </h3>
+                                            <p className="text-gray-600 mb-2">
+                                                Brand: {searchedProduct.brand}
+                                            </p>
                                             <p className="text-lg font-bold text-green-600 mb-2">
                                                 {searchedProduct.price.display}
                                             </p>
                                             <div className="flex items-center mb-4">
-                                                <span className="text-yellow-400">★</span>
-                                                <span className="ml-1">{searchedProduct.rating}</span>
+                                                <span className="text-yellow-400">
+                                                    ★
+                                                </span>
+                                                <span className="ml-1">
+                                                    {searchedProduct.rating}
+                                                </span>
                                             </div>
                                         </div>
                                         <div className="flex space-x-4 mt-auto">
@@ -387,7 +396,9 @@ export default function Profile() {
                 {userData.wishlist && userData.wishlist.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {userData.wishlist.map((item, index) => (
-                            <div key={index} className="bg-gray-50 rounded-lg p-6 relative flex flex-col h-full">
+                            <div
+                                key={index}
+                                className="bg-gray-50 rounded-lg p-6 relative flex flex-col h-full">
                                 <button
                                     onClick={() => handleDeleteItem(item.id)}
                                     className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
@@ -400,14 +411,22 @@ export default function Profile() {
                                         alt={item.title}
                                         className="w-full h-48 object-contain mb-4"
                                     />
-                                    <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
-                                    <p className="text-gray-600 mb-2">Brand: {item.brand}</p>
+                                    <h3 className="text-lg font-semibold mb-2">
+                                        {item.title}
+                                    </h3>
+                                    <p className="text-gray-600 mb-2">
+                                        Brand: {item.brand}
+                                    </p>
                                     <p className="text-lg font-bold text-green-600 mb-2">
                                         {item.price.display}
                                     </p>
                                     <div className="flex items-center mb-4">
-                                        <span className="text-yellow-400">★</span>
-                                        <span className="ml-1">{item.rating}</span>
+                                        <span className="text-yellow-400">
+                                            ★
+                                        </span>
+                                        <span className="ml-1">
+                                            {item.rating}
+                                        </span>
                                     </div>
                                 </div>
                                 <a
@@ -421,7 +440,9 @@ export default function Profile() {
                         ))}
                     </div>
                 ) : (
-                    <p className="text-center text-gray-500">No items in wishlist yet.</p>
+                    <p className="text-center text-gray-500">
+                        No items in wishlist yet.
+                    </p>
                 )}
             </div>
         </div>
