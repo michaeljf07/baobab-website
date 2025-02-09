@@ -20,11 +20,10 @@ function SignUp() {
         const formData = new FormData(event.currentTarget);
         const charityName = String(formData.get("charityname"));
         const registrationNumber = String(formData.get("Registration Number"));
+        const address = String(formData.get("address"));
         const email = String(formData.get("email"));
         const password = String(formData.get("password"));
-        const description = String(formData.get("desription"));
-        const imageLink =
-            "https://archive.org/download/instagram-plain-round/instagram%20dip%20in%20hair.jpg"; // default profile picture
+        const description = String(formData.get("description"));
 
         if (!isValidEmail(email)) {
             setError("Email is invalid");
@@ -44,10 +43,10 @@ function SignUp() {
                 body: JSON.stringify({
                     charityName,
                     registrationNumber,
+                    address,
                     email,
                     password,
                     description,
-                    imageLink,
                 }),
             });
 
@@ -84,6 +83,12 @@ function SignUp() {
                         required
                     />
                     <input
+                        name="address"
+                        placeholder="Address"
+                        className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
+                        required
+                    />
+                    <input
                         type="email"
                         name="email"
                         placeholder="Email"
@@ -98,7 +103,7 @@ function SignUp() {
                         required
                     />
                     <input
-                        name="desription"
+                        name="description"
                         placeholder="Your One Line Description"
                         className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
                         required

@@ -14,6 +14,10 @@ const userSchema = new Schema(
             required: true,
             unique: true,
         },
+        address: {
+            type: String,
+            required: true,
+        },
         email: {
             type: String,
             required: true,
@@ -32,22 +36,24 @@ const userSchema = new Schema(
             required: true,
         },
         wishlist: {
-            type: [{
-                title: String,
-                brand: String,
-                mainImageUrl: String,
-                rating: Number,
-                url: String,
-                price: {
-                    display: String
+            type: [
+                {
+                    title: String,
+                    brand: String,
+                    mainImageUrl: String,
+                    rating: Number,
+                    url: String,
+                    price: {
+                        display: String,
+                    },
+                    dateAdded: {
+                        type: Date,
+                        default: Date.now,
+                    },
                 },
-                dateAdded: {
-                    type: Date,
-                    default: Date.now
-                }
-            }],
-            default: []
-        }
+            ],
+            default: [],
+        },
     },
     { timestamps: true }
 );

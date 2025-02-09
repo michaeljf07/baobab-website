@@ -7,10 +7,10 @@ export const POST = async (request: any) => {
     const {
         charityName,
         registrationNumber,
+        address,
         email,
         password,
         description,
-        image,
     } = await request.json();
 
     await connect();
@@ -25,11 +25,12 @@ export const POST = async (request: any) => {
     const newUser = new User({
         charityName,
         registrationNumber,
+        address,
         email,
         password: hashedPassword,
         description,
-        image,
-        wishlist: []
+        image: "https://archive.org/download/instagram-plain-round/instagram%20dip%20in%20hair.jpg",
+        wishlist: [],
     });
 
     try {

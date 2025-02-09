@@ -5,11 +5,14 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 interface UserData {
+    _id: string;
     charityName: string;
     registrationNumber: string;
+    address: string;
     email: string;
     description: string;
     image: string;
+    wishlist: WishlistItem[];
 }
 
 interface AmazonProduct {
@@ -34,9 +37,7 @@ export default function Profile() {
     const [isEditing, setIsEditing] = useState(false);
     const [newCharityName, setNewCharityName] = useState("");
     const [error, setError] = useState("");
-    const [searchTerm, setSearchTerm] = useState("");
     const [amazonUrl, setAmazonUrl] = useState("");
-    const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [errorAmazon, setErrorAmazon] = useState("");
     const [searchedProduct, setSearchedProduct] =
@@ -160,10 +161,6 @@ export default function Profile() {
         }
     };
 
-    const handleSearch = () => {
-        // Functionality to be added later
-    };
-
     const handleAddToWishlist = async () => {
         if (!searchedProduct) return;
 
@@ -187,6 +184,31 @@ export default function Profile() {
         }
     };
 
+    const handleDeleteItem = async (itemId: string) => {
+        try {
+            const response = await fetch(`/api/wishlist/${itemId}`, {
+                method: "DELETE",
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to delete item from wishlist");
+            }
+
+            setUserData((prev) => {
+                if (!prev) return null;
+                return {
+                    ...prev,
+                    wishlist: prev.wishlist.filter(
+                        (item) => item.id !== itemId
+                    ),
+                };
+            });
+        } catch (error) {
+            console.error("Error deleting item:", error);
+            setError("Failed to delete item from wishlist");
+        }
+    };
+
     if (status === "loading") {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -201,7 +223,8 @@ export default function Profile() {
 
     return (
         <div className="max-w-4xl mx-auto py-12 px-4">
-            <div className="bg-white rounded-lg shadow-lg p-8">
+            {/* Profile Info Section */}
+            <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
                 <div className="flex items-center space-x-6 mb-8">
                     <div className="relative group w-48 h-32">
                         <img
@@ -265,6 +288,11 @@ export default function Profile() {
                     </div>
 
                     <div>
+                        <h2 className="text-xl font-semibold mb-2">Address</h2>
+                        <p className="text-gray-700">{userData.address}</p>
+                    </div>
+
+                    <div>
                         <h2 className="text-xl font-semibold mb-2">
                             Description
                         </h2>
@@ -291,68 +319,130 @@ export default function Profile() {
                 </div>
             </div>
 
-            <div className="my-6 flex flex-col items-center">
-                <div className="relative w-1/3 mb-6">
-                    <input
-                        type="text"
-                        placeholder="Paste Amazon URL..."
-                        value={amazonUrl}
-                        onChange={(e) => setAmazonUrl(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <button
-                        onClick={handleAddProduct}
-                        disabled={isLoading}
-                        className="absolute right-0 top-0 bottom-0 px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-400">
-                        {isLoading ? "Loading..." : "Search"}
-                    </button>
-                </div>
+            {/* Add to Wishlist Section */}
+            <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h2 className="text-2xl font-bold mb-6">Add to Wishlist</h2>
+                <div className="flex flex-col items-center">
+                    <div className="relative w-full max-w-xl mb-6">
+                        <input
+                            type="text"
+                            placeholder="Paste Amazon URL..."
+                            value={amazonUrl}
+                            onChange={(e) => setAmazonUrl(e.target.value)}
+                            className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <button
+                            onClick={handleAddProduct}
+                            disabled={isLoading}
+                            className="absolute right-0 top-0 bottom-0 px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-400">
+                            {isLoading ? "Loading..." : "Search"}
+                        </button>
+                    </div>
 
-                {errorAmazon && (
-                    <p className="text-red-500 mb-4">{errorAmazon}</p>
-                )}
-
-                {searchedProduct && (
-                    <div className="w-2/3 bg-white rounded-lg shadow-md p-6 mt-4">
-                        <div className="flex items-start space-x-6">
-                            <img
-                                src={searchedProduct.mainImageUrl}
-                                alt={searchedProduct.title}
-                                className="w-48 h-48 object-contain"
-                            />
-                            <div className="flex-1">
-                                <h3 className="text-xl font-semibold mb-2">
-                                    {searchedProduct.title}
-                                </h3>
-                                <p className="text-gray-600 mb-2">
-                                    Brand: {searchedProduct.brand}
-                                </p>
-                                <p className="text-lg font-bold text-green-600 mb-2">
-                                    {searchedProduct.price.display}
-                                </p>
-                                <div className="flex items-center mb-4">
-                                    <span className="text-yellow-400">★</span>
-                                    <span className="ml-1">
-                                        {searchedProduct.rating}
-                                    </span>
-                                </div>
-                                <div className="flex space-x-4">
-                                    <a
-                                        href={searchedProduct.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-block bg-cyan-600 text-white px-4 py-2 rounded hover:bg-amber-500">
-                                        View on Amazon
-                                    </a>
-                                    <button
-                                        onClick={handleAddToWishlist}
-                                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                                        Add to Wishlist
-                                    </button>
+                    {searchedProduct && (
+                        <div className="w-full bg-gray-50 rounded-lg p-6 mt-4">
+                            <div className="flex flex-col h-full">
+                                <div className="flex items-start space-x-6 flex-1">
+                                    <img
+                                        src={searchedProduct.mainImageUrl}
+                                        alt={searchedProduct.title}
+                                        className="w-48 h-48 object-contain"
+                                    />
+                                    <div className="flex-1 flex flex-col h-full">
+                                        <div className="flex-1">
+                                            <h3 className="text-xl font-semibold mb-2">
+                                                {searchedProduct.title}
+                                            </h3>
+                                            <p className="text-gray-600 mb-2">
+                                                Brand: {searchedProduct.brand}
+                                            </p>
+                                            <p className="text-lg font-bold text-green-600 mb-2">
+                                                {searchedProduct.price.display}
+                                            </p>
+                                            <div className="flex items-center mb-4">
+                                                <span className="text-yellow-400">
+                                                    ★
+                                                </span>
+                                                <span className="ml-1">
+                                                    {searchedProduct.rating}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="flex space-x-4 mt-auto">
+                                            <a
+                                                href={searchedProduct.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex-1 text-center bg-cyan-600 text-white px-4 py-2 rounded hover:bg-amber-500">
+                                                View on Amazon
+                                            </a>
+                                            <button
+                                                onClick={handleAddToWishlist}
+                                                className="flex-1 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                                                Add to Wishlist
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Current Wishlist Section */}
+            <div className="bg-white rounded-lg shadow-lg p-8">
+                <h2 className="text-2xl font-bold mb-6">Your Wishlist</h2>
+                {userData.wishlist && userData.wishlist.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {userData.wishlist.map((item, index) => (
+                            <div
+                                key={index}
+                                className="bg-gray-50 rounded-lg p-6 relative flex flex-col h-full">
+                                <button
+                                    onClick={() => handleDeleteItem(item.id)}
+                                    className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                                    aria-label="Delete item">
+                                    ×
+                                </button>
+                                <div className="flex-1">
+                                    <img
+                                        src={item.mainImageUrl}
+                                        alt={item.title}
+                                        className="w-full h-48 object-contain mb-4"
+                                    />
+                                    <h3 className="text-lg font-semibold mb-2">
+                                        {item.title}
+                                    </h3>
+                                    <p className="text-gray-600 mb-2">
+                                        Brand: {item.brand}
+                                    </p>
+                                    <p className="text-lg font-bold text-green-600 mb-2">
+                                        {item.price.display}
+                                    </p>
+                                    <div className="flex items-center mb-4">
+                                        <span className="text-yellow-400">
+                                            ★
+                                        </span>
+                                        <span className="ml-1">
+                                            {item.rating}
+                                        </span>
+                                    </div>
+                                </div>
+                                <a
+                                    href={item.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="block text-center bg-cyan-600 text-white px-4 py-2 rounded hover:bg-amber-500 mt-auto">
+                                    View on Amazon
+                                </a>
+                            </div>
+                        ))}
                     </div>
+                ) : (
+                    <p className="text-center text-gray-500">
+                        No items in wishlist yet.
+                    </p>
                 )}
             </div>
         </div>
