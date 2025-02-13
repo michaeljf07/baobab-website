@@ -1,33 +1,25 @@
-"use client";
+import AboutSection from "@/components/AboutSection";
 
-import { useRef } from "react";
+export const metadata = {
+    title: "About Us - Baobab",
+};
 
-function About() {
-    const targetRef = useRef<HTMLDivElement>(null);
-
-    const handleScroll = () => {
-        targetRef.current!.scrollIntoView({ behavior: "smooth" }); // Non-null assertion
-    };
+export default function About() {
     return (
-        <>
-            <title>About Us - Baobab</title>
+        <div>
             <div>
                 <img
                     src="about-us-background.png"
                     className="brightness-50 w-full"
+                    alt="About Us Background"
                 />
                 <h1 className="text-6xl font-bold absolute top-1/2 left-1/2 -translate-x-1/2 text-white">
                     About Us
                 </h1>
-                <button
-                    onClick={handleScroll}
-                    className="text-white text-lg border-2 border-white px-4 py-2 rounded-xl hover:bg-amber-500 hover:border-amber-500 absolute top-2/3 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    Learn More
-                </button>
+                <AboutSection />
             </div>
-            <div
-                ref={targetRef}
-                className="my-24 mx-24 flex justify-center items-start space-x-36">
+
+            <div className="my-24 mx-24 flex justify-center items-start space-x-36">
                 <div className="text-center w-1/2">
                     <h1 className="font-bold text-4xl py-10">
                         Our Organization
@@ -45,6 +37,7 @@ function About() {
                         effectively to make a real difference.
                     </p>
                 </div>
+
                 <div className="text-center w-1/2">
                     <h1 className="font-bold text-4xl py-10">Our Mission</h1>
                     <p className="text-lg">
@@ -59,8 +52,6 @@ function About() {
                     </p>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
-
-export default About;

@@ -71,15 +71,10 @@ function Contact() {
                     />
                 </form>
             </div>
-            {submitted ? (
+            {submitted && (
                 <p className="text-center font-bold text-xl text-black my-12">
                     {" "}
                     Thank you for contacting us!{" "}
-                </p>
-            ) : (
-                <p className="text-center font-bold text-xl text-black my-12">
-                    {" "}
-                    There was an error sending your message.{" "}
                 </p>
             )}
         </>

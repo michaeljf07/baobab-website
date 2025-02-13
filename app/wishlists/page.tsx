@@ -54,6 +54,7 @@ function Wishlists() {
 
     return (
         <>
+            <title>Expore Charities' Wishlists - Baobab</title>
             <h1 className="text-3xl font-bold text-center">Wishlists</h1>
             <div className="px-6 py-4">
                 <div className="my-6 flex justify-center">

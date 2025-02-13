@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Head from "next/head";
 
 interface WishlistItem {
     title: string;
@@ -32,6 +33,14 @@ export default function CharityWishlist() {
     const [charity, setCharity] = useState<CharityData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+
+    useEffect(() => {
+        if (charity) {
+            document.title = `${charity.charityName} Wishlist | Baobab`;
+        } else {
+            document.title = "Baobab - Charity Wishlists";
+        }
+    }, [charity]);
 
     const handleDeleteItem = async (itemId: string) => {
         try {
@@ -102,6 +111,13 @@ export default function CharityWishlist() {
 
     return (
         <div className="max-w-7xl mx-auto py-12 px-4">
+            <Head>
+                <title>{charity.charityName} Wishlist | Baobab</title>
+                <meta
+                    name="description"
+                    content={`Support ${charity.charityName} by fulfilling their wishlist.`}
+                />
+            </Head>
             <div className="text-center mb-12">
                 <img
                     src={charity.image}
@@ -120,24 +136,32 @@ export default function CharityWishlist() {
             {charity.wishlist && charity.wishlist.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {charity.wishlist.map((item, index) => (
-                        <div key={index} className="bg-white rounded-lg shadow-md p-6 relative flex flex-col h-full">
-                            {session?.user?.email === charity.email && item._id && (
-                                <button
-                                    onClick={() => handleDeleteItem(item._id!)}
-                                    className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-                                    aria-label="Delete item"
-                                >
-                                    ×
-                                </button>
-                            )}
+                        <div
+                            key={index}
+                            className="bg-white rounded-lg shadow-md p-6 relative flex flex-col h-full">
+                            {session?.user?.email === charity.email &&
+                                item._id && (
+                                    <button
+                                        onClick={() =>
+                                            handleDeleteItem(item._id!)
+                                        }
+                                        className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                                        aria-label="Delete item">
+                                        ×
+                                    </button>
+                                )}
                             <div className="flex-1">
                                 <img
                                     src={item.mainImageUrl}
                                     alt={item.title}
                                     className="w-full h-48 object-contain mb-4"
                                 />
-                                <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
-                                <p className="text-gray-600 mb-2">Brand: {item.brand}</p>
+                                <h3 className="text-lg font-semibold mb-2">
+                                    {item.title}
+                                </h3>
+                                <p className="text-gray-600 mb-2">
+                                    Brand: {item.brand}
+                                </p>
                                 <p className="text-lg font-bold text-green-600 mb-2">
                                     {item.price.display}
                                 </p>
