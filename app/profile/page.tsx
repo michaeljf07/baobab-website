@@ -25,8 +25,9 @@ interface AmazonProduct {
         display: string;
     };
 }
+
 interface WishlistItem extends AmazonProduct {
-    id: string;
+    _id: string;
     dateAdded: Date;
 }
 
@@ -43,6 +44,8 @@ export default function Profile() {
     const [searchedProduct, setSearchedProduct] =
         useState<AmazonProduct | null>(null);
     const [newImageUrl, setNewImageUrl] = useState("");
+    const [newAddress, setNewAddress] = useState("");
+    const [newDescription, setNewDescription] = useState("");
 
     useEffect(() => {
         if (status === "unauthenticated") {
@@ -71,7 +74,12 @@ export default function Profile() {
     }, [status]);
 
     const handleEdit = () => {
+        if (!userData) return;
         setIsEditing(true);
+        setNewCharityName(userData.charityName);
+        setNewAddress(userData.address);
+        setNewDescription(userData.description);
+        setNewImageUrl(userData.image);
     };
 
     const extractAsinAndDomain = (
@@ -88,16 +96,20 @@ export default function Profile() {
     };
 
     const handleAddProduct = async () => {
-        console.log("Search initiated with URL:", amazonUrl);
+        if (!amazonUrl.trim()) {
+            setError("Please enter an Amazon URL");
+            return;
+        }
+
         setError("");
+        setErrorAmazon("");
         setIsLoading(true);
         setSearchedProduct(null);
 
         const { asin, domain } = extractAsinAndDomain(amazonUrl);
-        console.log("Extracted ASIN:", asin, "Domain:", domain);
 
         if (!asin) {
-            setError("Invalid Amazon URL");
+            setErrorAmazon("Invalid Amazon URL");
             setIsLoading(false);
             return;
         }
@@ -110,31 +122,32 @@ export default function Profile() {
                 },
                 body: JSON.stringify({ asin, domain }),
             });
-            console.log("API Response status:", response.status);
 
             if (!response.ok) {
                 throw new Error("Failed to fetch product details");
             }
 
             const data = await response.json();
-            console.log("Product data received:", data);
+            if (!data.data?.amazonProduct) {
+                throw new Error("Product not found");
+            }
+
             const product = data.data.amazonProduct;
             product.url = product.url.replace(/amazon\.com/, domain);
             setSearchedProduct(product);
         } catch (error) {
             console.error("Error in handleAddProduct:", error);
-            setError("Failed to add product");
+            setErrorAmazon(error instanceof Error ? error.message : "Failed to add product");
         } finally {
             setIsLoading(false);
         }
     };
 
     const handleSave = async () => {
-        if (newImageUrl === "") {
-            setNewImageUrl(
-                "https://archive.org/download/instagram-plain-round/instagram%20dip%20in%20hair.jpg"
-            );
-        }
+        if (!userData) return;
+        
+        const imageUrl = newImageUrl || userData.image || "https://archive.org/download/instagram-plain-round/instagram%20dip%20in%20hair.jpg";
+        
         try {
             const response = await fetch("/api/profile/update", {
                 method: "PUT",
@@ -143,7 +156,9 @@ export default function Profile() {
                 },
                 body: JSON.stringify({
                     charityName: newCharityName,
-                    image: newImageUrl,
+                    image: imageUrl,
+                    address: newAddress,
+                    description: newDescription,
                 }),
             });
 
@@ -177,7 +192,19 @@ export default function Profile() {
                 throw new Error("Failed to add item to wishlist");
             }
 
-            alert("Item added to wishlist successfully!");
+            // Refresh user data to get updated wishlist
+            const refreshResponse = await fetch("/api/profile");
+            if (!refreshResponse.ok) {
+                throw new Error("Failed to refresh profile data");
+            }
+            const updatedData = await refreshResponse.json();
+            setUserData(updatedData);
+            
+            // Clear the form
+            setAmazonUrl("");
+            setSearchedProduct(null);
+            setError("");
+            setErrorAmazon("");
         } catch (error) {
             console.error("Error adding to wishlist:", error);
             setError("Failed to add item to wishlist");
@@ -185,8 +212,10 @@ export default function Profile() {
     };
 
     const handleDeleteItem = async (itemId: string) => {
+        if (!userData?._id) return;
+        
         try {
-            const response = await fetch(`/api/wishlist/${itemId}`, {
+            const response = await fetch(`/api/wishlists/${userData._id}/items/${itemId}`, {
                 method: "DELETE",
             });
 
@@ -194,15 +223,14 @@ export default function Profile() {
                 throw new Error("Failed to delete item from wishlist");
             }
 
-            setUserData((prev) => {
-                if (!prev) return null;
-                return {
-                    ...prev,
-                    wishlist: prev.wishlist.filter(
-                        (item) => item.id !== itemId
-                    ),
-                };
-            });
+            // Refresh the user data to ensure we have the latest wishlist
+            const refreshResponse = await fetch("/api/profile");
+            if (!refreshResponse.ok) {
+                throw new Error("Failed to refresh profile data");
+            }
+            const updatedData = await refreshResponse.json();
+            setUserData(updatedData);
+            setError("");
         } catch (error) {
             console.error("Error deleting item:", error);
             setError("Failed to delete item from wishlist");
@@ -282,21 +310,44 @@ export default function Profile() {
                         <h2 className="text-xl font-semibold mb-2">
                             Registration Number
                         </h2>
-                        <p className="text-gray-700">
-                            {userData.registrationNumber}
-                        </p>
+                        <div className="group relative">
+                            <p className="text-gray-700">
+                                {userData.registrationNumber}
+                            </p>
+                            <div className="absolute hidden group-hover:block bg-gray-800 text-white text-sm rounded px-2 py-1 mt-1">
+                                Please email us to change your registration number
+                            </div>
+                        </div>
                     </div>
 
                     <div>
                         <h2 className="text-xl font-semibold mb-2">Address</h2>
-                        <p className="text-gray-700">{userData.address}</p>
+                        {isEditing ? (
+                            <input
+                                type="text"
+                                value={newAddress}
+                                onChange={(e) => setNewAddress(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded-md"
+                            />
+                        ) : (
+                            <p className="text-gray-700">{userData.address}</p>
+                        )}
                     </div>
 
                     <div>
                         <h2 className="text-xl font-semibold mb-2">
                             Description
                         </h2>
-                        <p className="text-gray-700">{userData.description}</p>
+                        {isEditing ? (
+                            <textarea
+                                value={newDescription}
+                                onChange={(e) => setNewDescription(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded-md"
+                                rows={4}
+                            />
+                        ) : (
+                            <p className="text-gray-700">{userData.description}</p>
+                        )}
                     </div>
                 </div>
 
@@ -330,6 +381,7 @@ export default function Profile() {
                             value={amazonUrl}
                             onChange={(e) => setAmazonUrl(e.target.value)}
                             className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            disabled={isLoading}
                         />
                         <button
                             onClick={handleAddProduct}
@@ -339,7 +391,14 @@ export default function Profile() {
                         </button>
                     </div>
 
-                    {searchedProduct && (
+                    {isLoading && (
+                        <div className="w-full text-center py-8">
+                            <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
+                            <p className="mt-2 text-gray-600">Loading product details...</p>
+                        </div>
+                    )}
+
+                    {searchedProduct && !isLoading && (
                         <div className="w-full bg-gray-50 rounded-lg p-6 mt-4">
                             <div className="flex flex-col h-full">
                                 <div className="flex items-start space-x-6 flex-1">
@@ -395,12 +454,12 @@ export default function Profile() {
                 <h2 className="text-2xl font-bold mb-6">Your Wishlist</h2>
                 {userData.wishlist && userData.wishlist.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {userData.wishlist.map((item, index) => (
+                        {userData.wishlist.map((item) => (
                             <div
-                                key={index}
+                                key={item._id}
                                 className="bg-gray-50 rounded-lg p-6 relative flex flex-col h-full">
                                 <button
-                                    onClick={() => handleDeleteItem(item.id)}
+                                    onClick={() => handleDeleteItem(item._id)}
                                     className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
                                     aria-label="Delete item">
                                     ×
