@@ -46,6 +46,10 @@ export default function Profile() {
     const [newImageUrl, setNewImageUrl] = useState("");
     const [newAddress, setNewAddress] = useState("");
     const [newDescription, setNewDescription] = useState("");
+    const [showPasswordChange, setShowPasswordChange] = useState(false);
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [passwordError, setPasswordError] = useState("");
 
     useEffect(() => {
         if (status === "unauthenticated") {
@@ -237,6 +241,40 @@ export default function Profile() {
         }
     };
 
+    const handlePasswordChange = async () => {
+        if (!oldPassword || !newPassword) {
+            setPasswordError("Both fields are required");
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/profile/password", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    oldPassword,
+                    newPassword,
+                }),
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.error || "Failed to update password");
+            }
+
+            // Reset form
+            setOldPassword("");
+            setNewPassword("");
+            setShowPasswordChange(false);
+            setPasswordError("");
+            alert("Password updated successfully");
+        } catch (error) {
+            setPasswordError(error instanceof Error ? error.message : "Failed to update password");
+        }
+    };
+
     if (status === "loading") {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -368,6 +406,77 @@ export default function Profile() {
                         Save Image
                     </button>
                 </div>
+            </div>
+
+            {/* Password Management Section */}
+            <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+                <h2 className="text-2xl font-bold mb-6">Password Management</h2>
+                
+                {!showPasswordChange ? (
+                    <div className="space-y-4">
+                        <button
+                            onClick={() => setShowPasswordChange(true)}
+                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                            Change Password
+                        </button>
+                        
+                        <div className="mt-4">
+                            <h3 className="text-lg font-semibold mb-2">Forgot Your Password?</h3>
+                            <p className="text-gray-600">
+                                Please visit our <a href="/contact" className="text-blue-500 hover:underline">contact page</a> and 
+                                reach out to us with your registered email address. We'll help you recover your account.
+                            </p>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Current Password
+                            </label>
+                            <input
+                                type="password"
+                                value={oldPassword}
+                                onChange={(e) => setOldPassword(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded-md"
+                            />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                New Password
+                            </label>
+                            <input
+                                type="password"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded-md"
+                            />
+                        </div>
+                        
+                        {passwordError && (
+                            <p className="text-red-500">{passwordError}</p>
+                        )}
+                        
+                        <div className="flex space-x-4">
+                            <button
+                                onClick={handlePasswordChange}
+                                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                                Update Password
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowPasswordChange(false);
+                                    setOldPassword("");
+                                    setNewPassword("");
+                                    setPasswordError("");
+                                }}
+                                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Add to Wishlist Section */}
