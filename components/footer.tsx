@@ -20,10 +20,10 @@ function Footer() {
 
     return (
         <div className="bg-slate-100">
-            <section className="py-6">
+            <section className="py-4">
                 <h2
                     onClick={scrollToTop}
-                    className="text-xl font-bold text-black text-center mb-2 cursor-pointer hover:opacity-80 transition-opacity">
+                    className="text-xl font-bold text-black text-center cursor-pointer hover:opacity-80 transition-opacity">
                     Baobab
                 </h2>
                 <p
@@ -35,6 +35,17 @@ function Footer() {
                             Copied!
                         </span>
                     )}
+                </p>
+                <p className="text-center">
+                    <a href="/legal/terms-of-service" className="text-blue-500">
+                        Terms of Service
+                    </a>{" "}
+                    |
+                    <a
+                        href="/legal/privacy-policy"
+                        className="text-blue-500 ml-2">
+                        Privacy Policy
+                    </a>
                 </p>
             </section>
             <footer className="pb-6">
