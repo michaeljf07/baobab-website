@@ -3,6 +3,23 @@
 import Carousel from "@/components/carousel";
 import { useRef } from "react";
 import Link from "next/link";
+import Script from "next/script";
+
+<Script
+    type="application/ld+json"
+    dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Baobab",
+            url: "outreachbaobab.org",
+            logo: "logo.png",
+            description:
+                "Baobab connects generous donors with charities, making donations seamless and impactful.",
+            sameAs: ["https://www.linkedin.com/company/baobab-outreach/"],
+        }),
+    }}
+/>;
 
 export default function Home() {
     const aboutRef = useRef<HTMLElement>(null);
