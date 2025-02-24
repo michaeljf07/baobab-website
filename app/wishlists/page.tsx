@@ -25,8 +25,10 @@ function Wishlists() {
     const [charities, setCharities] = useState<Charity[]>([]);
     const [filteredCharities, setFilteredCharities] = useState<Charity[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [loading, setLoading] = useState(false);
 
     async function fetchUsers() {
+        setLoading(true);
         try {
             const response = await fetch("/api/users", { method: "GET" });
             if (!response.ok) {
@@ -38,6 +40,8 @@ function Wishlists() {
             setFilteredCharities(data.users);
         } catch (error) {
             console.error("Failed to fetch charities:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -74,32 +78,36 @@ function Wishlists() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mx-auto max-w-7xl">
-                    {filteredCharities.map((charity) => (
-                        <Link
-                            href={`/wishlists/${charity._id}`}
-                            key={charity._id}>
-                            <div className="bg-white border rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 cursor-pointer">
-                                <img
-                                    src={charity.image}
-                                    alt={charity.charityName}
-                                    className="w-full h-32 object-cover rounded-md mb-4"
-                                />
-                                <h3 className="text-lg font-semibold mb-2">
-                                    {charity.charityName}
-                                </h3>
-                                <p className="text-sm text-gray-600">
-                                    {charity.description}
-                                </p>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
-
-                {filteredCharities.length === 0 && (
-                    <p className="text-center text-gray-500 mt-4">
+                {loading ? (
+                    <div className="flex justify-center items-center min-h-[200px]">
+                        <p className="text-xl text-gray-500">Loading...</p>
+                    </div>
+                ) : filteredCharities.length === 0 ? (
+                    <p className="text-center text-gray-500 col-span-full">
                         No charities found.
                     </p>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mx-auto max-w-7xl">
+                        {filteredCharities.map((charity) => (
+                            <Link
+                                href={`/wishlists/${charity._id}`}
+                                key={charity._id}>
+                                <div className="bg-white border rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 cursor-pointer">
+                                    <img
+                                        src={charity.image}
+                                        alt={charity.charityName}
+                                        className="w-full h-32 object-cover rounded-md mb-4"
+                                    />
+                                    <h3 className="text-lg font-semibold mb-2">
+                                        {charity.charityName}
+                                    </h3>
+                                    <p className="text-sm text-gray-600">
+                                        {charity.description}
+                                    </p>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
                 )}
             </div>
         </>
