@@ -84,7 +84,7 @@ function SignIn() {
                 </form>
                 <div className="text-center mx-auto">
                     <p className="inline-block">
-                        Don't have an account?{" "}
+                        Don&apos;t have an account?{" "}
                         <Link
                             href="/account/signup"
                             className="text-sky-500 underline">

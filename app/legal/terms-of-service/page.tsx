@@ -49,8 +49,8 @@ function TermsOfService() {
                     returns.
                 </p>
                 <p>
-                    Our website is provided "as is," without warranties of any
-                    kind.
+                    Our website is provided &quot;as is,&quot; without
+                    warranties of any kind.
                 </p>
             </section>
 

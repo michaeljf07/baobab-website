@@ -1,11 +1,11 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import { Account, User as AuthUser } from "next-auth";
 import bcrypt from "bcryptjs";
 import User from "@/models/User";
 import connect from "@/utils/db";
 import NextAuth from "next-auth";
+import { NextAuthOptions } from "next-auth";
 
-export const authOptions: any = {
+export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
             id: "credentials",
@@ -14,7 +14,13 @@ export const authOptions: any = {
                 email: { label: "Email", type: "email" },
                 password: { label: "Password", type: "password" },
             },
-            async authorize(credentials: any) {
+            async authorize(
+                credentials: { email: string; password: string } | undefined
+            ) {
+                if (!credentials) {
+                    throw new Error("Missing credentials");
+                }
+
                 await connect();
                 try {
                     const user = await User.findOne({
@@ -30,13 +36,17 @@ export const authOptions: any = {
                             return user;
                         }
                     }
-                } catch (err: any) {
-                    throw new Error(err);
+                } catch (err: unknown) {
+                    if (err instanceof Error) {
+                        throw new Error(err.message);
+                    }
+                    throw new Error("Unknown error occurred");
                 }
             },
         }),
     ],
 };
 
-export const handler = NextAuth(authOptions);
+const handler = NextAuth(authOptions);
+
 export { handler as GET, handler as POST };

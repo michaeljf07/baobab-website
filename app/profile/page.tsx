@@ -32,7 +32,7 @@ interface WishlistItem extends AmazonProduct {
 }
 
 export default function Profile() {
-    const { data: session, status } = useSession();
+    const { status } = useSession();
     const router = useRouter();
     const [userData, setUserData] = useState<UserData | null>(null);
     const [isEditing, setIsEditing] = useState(false);
@@ -141,7 +141,10 @@ export default function Profile() {
             setSearchedProduct(product);
         } catch (error) {
             console.error("Error in handleAddProduct:", error);
-            setErrorAmazon(error instanceof Error ? error.message : "Failed to add product");
+            console.log(errorAmazon);
+            setErrorAmazon(
+                error instanceof Error ? error.message : "Failed to add product"
+            );
         } finally {
             setIsLoading(false);
         }
@@ -149,9 +152,12 @@ export default function Profile() {
 
     const handleSave = async () => {
         if (!userData) return;
-        
-        const imageUrl = newImageUrl || userData.image || "https://archive.org/download/instagram-plain-round/instagram%20dip%20in%20hair.jpg";
-        
+
+        const imageUrl =
+            newImageUrl ||
+            userData.image ||
+            "https://archive.org/download/instagram-plain-round/instagram%20dip%20in%20hair.jpg";
+
         try {
             const response = await fetch("/api/profile/update", {
                 method: "PUT",
@@ -203,7 +209,7 @@ export default function Profile() {
             }
             const updatedData = await refreshResponse.json();
             setUserData(updatedData);
-            
+
             // Clear the form
             setAmazonUrl("");
             setSearchedProduct(null);
@@ -217,11 +223,14 @@ export default function Profile() {
 
     const handleDeleteItem = async (itemId: string) => {
         if (!userData?._id) return;
-        
+
         try {
-            const response = await fetch(`/api/wishlists/${userData._id}/items/${itemId}`, {
-                method: "DELETE",
-            });
+            const response = await fetch(
+                `/api/wishlists/${userData._id}/items/${itemId}`,
+                {
+                    method: "DELETE",
+                }
+            );
 
             if (!response.ok) {
                 throw new Error("Failed to delete item from wishlist");
@@ -271,7 +280,11 @@ export default function Profile() {
             setPasswordError("");
             alert("Password updated successfully");
         } catch (error) {
-            setPasswordError(error instanceof Error ? error.message : "Failed to update password");
+            setPasswordError(
+                error instanceof Error
+                    ? error.message
+                    : "Failed to update password"
+            );
         }
     };
 
@@ -353,7 +366,8 @@ export default function Profile() {
                                 {userData.registrationNumber}
                             </p>
                             <div className="absolute hidden group-hover:block bg-gray-800 text-white text-sm rounded px-2 py-1 mt-1">
-                                Please email us to change your registration number
+                                Please email us to change your registration
+                                number
                             </div>
                         </div>
                     </div>
@@ -379,12 +393,16 @@ export default function Profile() {
                         {isEditing ? (
                             <textarea
                                 value={newDescription}
-                                onChange={(e) => setNewDescription(e.target.value)}
+                                onChange={(e) =>
+                                    setNewDescription(e.target.value)
+                                }
                                 className="w-full p-2 border border-gray-300 rounded-md"
                                 rows={4}
                             />
                         ) : (
-                            <p className="text-gray-700">{userData.description}</p>
+                            <p className="text-gray-700">
+                                {userData.description}
+                            </p>
                         )}
                     </div>
                 </div>
@@ -411,7 +429,7 @@ export default function Profile() {
             {/* Password Management Section */}
             <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
                 <h2 className="text-2xl font-bold mb-6">Password Management</h2>
-                
+
                 {!showPasswordChange ? (
                     <div className="space-y-4">
                         <button
@@ -419,12 +437,21 @@ export default function Profile() {
                             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                             Change Password
                         </button>
-                        
+
                         <div className="mt-4">
-                            <h3 className="text-lg font-semibold mb-2">Forgot Your Password?</h3>
+                            <h3 className="text-lg font-semibold mb-2">
+                                Forgot Your Password?
+                            </h3>
                             <p className="text-gray-600">
-                                Please visit our <a href="/contact" className="text-blue-500 hover:underline">contact page</a> and 
-                                reach out to us with your registered email address. We'll help you recover your account.
+                                Please visit our{" "}
+                                <a
+                                    href="/contact"
+                                    className="text-blue-500 hover:underline">
+                                    contact page
+                                </a>{" "}
+                                and reach out to us with your registered email
+                                address. We&apos;ll help you recover your
+                                account.
                             </p>
                         </div>
                     </div>
@@ -441,7 +468,7 @@ export default function Profile() {
                                 className="w-full p-2 border border-gray-300 rounded-md"
                             />
                         </div>
-                        
+
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 New Password
@@ -453,11 +480,11 @@ export default function Profile() {
                                 className="w-full p-2 border border-gray-300 rounded-md"
                             />
                         </div>
-                        
+
                         {passwordError && (
                             <p className="text-red-500">{passwordError}</p>
                         )}
-                        
+
                         <div className="flex space-x-4">
                             <button
                                 onClick={handlePasswordChange}
@@ -503,7 +530,9 @@ export default function Profile() {
                     {isLoading && (
                         <div className="w-full text-center py-8">
                             <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
-                            <p className="mt-2 text-gray-600">Loading product details...</p>
+                            <p className="mt-2 text-gray-600">
+                                Loading product details...
+                            </p>
                         </div>
                     )}
 

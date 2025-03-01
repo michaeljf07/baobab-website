@@ -6,6 +6,7 @@ import Link from "next/link";
 import Script from "next/script";
 
 <Script
+    id="organization-schema"
     type="application/ld+json"
     dangerouslySetInnerHTML={{
         __html: JSON.stringify({

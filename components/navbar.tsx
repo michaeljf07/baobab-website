@@ -6,7 +6,7 @@ import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 
 function Navbar() {
-    const { data: session }: any = useSession();
+    const { data: session } = useSession();
 
     const router = usePathname();
 

@@ -3,7 +3,7 @@ import connect from "@/utils/db";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
-export const POST = async (request: any) => {
+export const POST = async (request: Request) => {
     const {
         charityName,
         registrationNumber,
@@ -36,8 +36,11 @@ export const POST = async (request: any) => {
     try {
         await newUser.save();
         return new NextResponse("User has been registered", { status: 201 });
-    } catch (err: any) {
+    } catch (err: unknown) {
         console.error("Error saving user:", err);
-        return new NextResponse(err, { status: 500 });
+        if (err instanceof Error) {
+            return new NextResponse(err.message, { status: 500 });
+        }
+        return new NextResponse("An unknown error occurred", { status: 500 });
     }
 };
