@@ -74,7 +74,7 @@ function Navbar() {
                             <img
                                 src={profilePicture}
                                 alt="Profile"
-                                className="w-10 h-10 rounded-full cursor-pointer"
+                                className="w-10 h-10 rounded-full object-cover cursor-pointer"
                                 onClick={toggleDropdown}
                             />
                             {dropdownVisible && (
