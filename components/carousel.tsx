@@ -12,15 +12,15 @@ const Carousel = ({ onReadMoreClick }: CarouselProps) => {
     const slides = [
         {
             title: "Welcome to Baobab",
-            image: "/carousel1.jpg",
+            image: "/Carousel1.jpg",
         },
         {
             title: "Make a Difference",
-            image: "/carousel2.jpg",
+            image: "/Carousel2.jpg",
         },
         {
             title: "Join Our Community",
-            image: "/carousel3.jpg",
+            image: "/Carousel3.jpg",
         },
     ];
 
