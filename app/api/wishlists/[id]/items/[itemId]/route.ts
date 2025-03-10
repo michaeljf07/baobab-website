@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/auth.config";
 import connect from "@/utils/db";
 import User from "@/models/User";
 import { Session } from "next-auth";
@@ -10,7 +10,7 @@ export async function DELETE(
     context: { params: { id: string; itemId: string } }
 ) {
     try {
-        const session = await getServerSession(authOptions) as Session;
+        const session = (await getServerSession(authOptions)) as Session;
         if (!session?.user?.email) {
             return NextResponse.json(
                 { error: "Not authenticated" },
@@ -19,7 +19,7 @@ export async function DELETE(
         }
 
         const { id, itemId } = context.params;
-        
+
         await connect();
 
         // First verify the user owns this charity
@@ -53,4 +53,4 @@ export async function DELETE(
             { status: 500 }
         );
     }
-} 
+}
