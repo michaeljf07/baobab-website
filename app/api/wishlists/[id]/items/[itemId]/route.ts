@@ -10,7 +10,7 @@ export async function DELETE(
     context: { params: { id: string; itemId: string } }
 ) {
     try {
-        const session = await getServerSession(authOptions) as Session;
+        const session = (await getServerSession(authOptions)) as Session;
         if (!session?.user?.email) {
             return NextResponse.json(
                 { error: "Not authenticated" },
@@ -19,7 +19,7 @@ export async function DELETE(
         }
 
         const { id, itemId } = context.params;
-        
+
         await connect();
 
         // First verify the user owns this charity
@@ -53,4 +53,4 @@ export async function DELETE(
             { status: 500 }
         );
     }
-} 
+}

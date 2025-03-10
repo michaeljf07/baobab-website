@@ -7,7 +7,7 @@ import { Session } from "next-auth";
 
 export async function GET() {
     try {
-        const session = await getServerSession(authOptions) as Session;
+        const session = (await getServerSession(authOptions)) as Session;
         if (!session?.user?.email) {
             return NextResponse.json(
                 { error: "Not authenticated" },
@@ -25,8 +25,8 @@ export async function GET() {
             );
         }
 
-        // Remove sensitive information
-        const { password, ...userWithoutPassword } = user.toObject();
+        const userWithoutPassword = user.toObject();
+        delete userWithoutPassword.password;
 
         return NextResponse.json({
             user: userWithoutPassword,
@@ -42,7 +42,7 @@ export async function GET() {
 
 export async function PUT(request: Request) {
     try {
-        const session = await getServerSession(authOptions) as Session;
+        const session = (await getServerSession(authOptions)) as Session;
         if (!session?.user?.email) {
             return NextResponse.json(
                 { error: "Not authenticated" },
