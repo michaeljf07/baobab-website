@@ -1,7 +1,7 @@
 
 # Baobab
 
-[outreachboabab.org](https://theforge.mcmaster.ca/startups/local-reach/)
+[outreachboabab.org](https://outreachbaobab.org/)
 
 Baobab is a platform designed to make charitable giving simple, transparent, and impactful. Charities can sign up to create wishlists of essential goods they need, such as shampoo, canned food, and clothing. Donors can then browse these wishlists and directly purchase items, which are shipped to the charities via Amazon.
 
