@@ -73,12 +73,12 @@ const Carousel = ({ onReadMoreClick }: CarouselProps) => {
                         }}
                     />
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <h2 className="text-white text-6xl font-bold mb-8">
+                        <h2 className="text-white text-3xl md:text-6xl font-bold mb-4 md:mb-8 text-center px-4">
                             {slide.title}
                         </h2>
                         <button
                             onClick={onReadMoreClick}
-                            className="border-2 border-white text-white px-8 py-3 text-lg rounded-lg hover:bg-white hover:text-black transition-colors duration-300">
+                            className="border-2 border-white text-white px-6 md:px-8 py-2 md:py-3 text-base md:text-lg rounded-lg hover:bg-white hover:text-black transition-colors duration-300">
                             Read More
                         </button>
                     </div>
@@ -87,10 +87,10 @@ const Carousel = ({ onReadMoreClick }: CarouselProps) => {
 
             <button
                 onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-20">
+                className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-20">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-12 w-12"
+                    className="h-8 w-8 md:h-12 md:w-12"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor">
@@ -104,10 +104,10 @@ const Carousel = ({ onReadMoreClick }: CarouselProps) => {
             </button>
             <button
                 onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-20">
+                className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-20">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-12 w-12"
+                    className="h-8 w-8 md:h-12 md:w-12"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor">
