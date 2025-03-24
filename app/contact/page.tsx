@@ -13,7 +13,7 @@ function Contact() {
 
         const name = formData.get("name");
         const email = formData.get("email");
-        const phoneNumber = formData.get("phone-number");
+        const phoneNumber = formData.get("phoneNumber");
         const message = formData.get("message");
 
         const response = await fetch("/api/emails", {
@@ -56,11 +56,13 @@ function Contact() {
                         className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
                     />
                     <input
-                        name="phone-number"
+                        type="tel"
+                        name="phoneNumber"
                         placeholder="Phone Number"
                         className="block w-full border-b-2 border-orange-950 p-2 bg-transparent"
                     />
                     <textarea
+                        name="message"
                         placeholder="Message"
                         className="block mt-10 h-24 w-full border-b-2 border-orange-950 p-2 bg-transparent"
                     />
