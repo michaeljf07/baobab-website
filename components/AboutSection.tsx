@@ -13,7 +13,7 @@ export default function AboutSection() {
         <>
             <button
                 onClick={handleScroll}
-                className="text-white text-lg border-2 border-white px-4 py-2 rounded-xl hover:bg-amber-500 hover:border-amber-500 absolute top-2/3 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                className="text-white text-base md:text-lg border-2 border-white px-4 py-2 rounded-xl hover:bg-amber-500 hover:border-amber-500 transition-colors mt-6 md:mt-8">
                 Learn More
             </button>
 
