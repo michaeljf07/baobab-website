@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
 export async function POST(req: Request) {
-    const { name, email, phone, message } = await req.json();
+    const { name, email, phoneNumber, message } = await req.json();
 
     if (!name || !email || !message) {
         return NextResponse.json(
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
             from: email,
             to: process.env.EMAIL_TO,
             subject: `Contact Form Submission from ${name}`,
-            text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\n\nMessage:\n${message}`,
+            text: `Name: ${name}\nEmail: ${email}\nPhone: ${phoneNumber}\n\nMessage:\n${message}`,
         });
 
         return NextResponse.json({ success: "Message sent successfully!" });
