@@ -3,6 +3,8 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import ContactInfoPage from "./contact-info/page";
 
 interface UserData {
     _id: string;
@@ -426,6 +428,8 @@ export default function Profile() {
                 </div>
             </div>
 
+            <ContactInfoPage />
+
             {/* Password Management Section */}
             <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
                 <h2 className="text-2xl font-bold mb-6">Password Management</h2>
@@ -641,6 +645,14 @@ export default function Profile() {
                         No items in wishlist yet.
                     </p>
                 )}
+            </div>
+
+            <div className="mt-8 text-center">
+                <Link
+                    href="/profile/contact-info"
+                    className="text-blue-600 hover:underline text-lg">
+                    View or Edit Contact Info
+                </Link>
             </div>
         </div>
     );
