@@ -89,7 +89,7 @@ function Navbar() {
                             <img
                                 src={profilePicture}
                                 alt="Profile"
-                                className="w-10 h-10 rounded-full cursor-pointer"
+                                className="w-10 h-10 rounded-full object-cover cursor-pointe"
                                 onClick={toggleDropdown}
                             />
                             {dropdownVisible && (
@@ -98,6 +98,11 @@ function Navbar() {
                                         href="/profile"
                                         className="block text-center px-4 py-2 text-gray-700 hover:bg-gray-100">
                                         Profile
+                                    </Link>
+                                    <Link
+                                        href="/profile/contact-info"
+                                        className="block text-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                        Contact Info
                                     </Link>
                                     <button
                                         onClick={() => signOut()}

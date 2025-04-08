@@ -3,6 +3,8 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+
 
 interface UserData {
     _id: string;
@@ -502,6 +504,9 @@ export default function Profile() {
                                 Cancel
                             </button>
                         </div>
+                        
+                        
+
                     </div>
                 )}
             </div>
@@ -642,6 +647,16 @@ export default function Profile() {
                     </p>
                 )}
             </div>
+
+            <div className="mt-8 text-center">
+                            <Link
+                                href="/profile/contact-info"
+                                className="text-blue-600 hover:underline text-lg"
+                            >
+                                View or Edit Contact Info
+                            </Link>
+                        
+                        </div>
         </div>
     );
 }
