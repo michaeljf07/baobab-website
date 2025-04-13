@@ -8,7 +8,7 @@ export default function ContactInfoPage() {
         name: "Gurshaan Sidhu",
         email: "gurshaan@example.com",
         phone: "(416) 123-4567",
-        website: "https://baobab.org",
+        website: "https://outreachbaobab.org",
         tagline: "Co-founder of Baobab | Community-first innovator",
     });
 
