@@ -178,7 +178,7 @@ export default function Profile() {
             }
 
             const updatedData = await response.json();
-            setUserData(updatedData);
+            setUserData(updatedData.user);
             setIsEditing(false);
             setError("");
         } catch (error) {
