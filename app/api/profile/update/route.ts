@@ -66,6 +66,7 @@ export async function PUT(request: Request) {
         user.charityName = data.charityName || user.charityName;
         user.description = data.description || user.description;
         user.image = data.image || user.image;
+        user.address = data.address || user.address;
 
         await user.save();
 

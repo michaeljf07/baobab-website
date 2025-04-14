@@ -99,11 +99,6 @@ function Navbar() {
                                         className="block text-center px-4 py-2 text-gray-700 hover:bg-gray-100">
                                         Profile
                                     </Link>
-                                    <Link
-                                        href="/profile/contact-info"
-                                        className="block text-center px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                        Contact Info
-                                    </Link>
                                     <button
                                         onClick={() => signOut()}
                                         className="block text-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100">
@@ -144,14 +139,13 @@ function Navbar() {
                         ) : (
                             <Link
                                 href="/profile"
-                                className="flex items-center space-x-2"
+                                className="flex items-center justify-center"
                                 onClick={() => setMobileMenuOpen(false)}>
                                 <img
                                     src={profilePicture}
                                     alt="Profile"
                                     className="w-8 h-8 rounded-full"
                                 />
-                                <span>Profile</span>
                             </Link>
                         )}
                     </div>

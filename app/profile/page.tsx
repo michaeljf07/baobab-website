@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
+import ContactInfoPage from "./contact-info/page";
 
 interface UserData {
     _id: string;
@@ -34,7 +34,7 @@ interface WishlistItem extends AmazonProduct {
 }
 
 export default function Profile() {
-    const { status } = useSession();
+    const { status, data: session } = useSession();
     const router = useRouter();
     const [userData, setUserData] = useState<UserData | null>(null);
     const [isEditing, setIsEditing] = useState(false);
@@ -67,10 +67,14 @@ export default function Profile() {
                     throw new Error("Failed to fetch user data");
                 }
                 const data = await response.json();
-                setUserData(data);
-                setNewCharityName(data.charityName);
+                setUserData(data.user);
+                setNewCharityName(data.user.charityName);
+                setNewAddress(data.user.address);
+                setNewDescription(data.user.description);
+                setNewImageUrl(data.user.image);
             } catch (error) {
                 console.error("Error fetching user data:", error);
+                setError("Failed to load profile data");
             }
         };
 
@@ -155,11 +159,6 @@ export default function Profile() {
     const handleSave = async () => {
         if (!userData) return;
 
-        const imageUrl =
-            newImageUrl ||
-            userData.image ||
-            "https://archive.org/download/instagram-plain-round/instagram%20dip%20in%20hair.jpg";
-
         try {
             const response = await fetch("/api/profile/update", {
                 method: "PUT",
@@ -168,9 +167,9 @@ export default function Profile() {
                 },
                 body: JSON.stringify({
                     charityName: newCharityName,
-                    image: imageUrl,
                     address: newAddress,
                     description: newDescription,
+                    image: newImageUrl || userData.image,
                 }),
             });
 
@@ -179,12 +178,12 @@ export default function Profile() {
             }
 
             const updatedData = await response.json();
-            setUserData(updatedData);
+            setUserData(updatedData.user);
             setIsEditing(false);
             setError("");
         } catch (error) {
-            setError("Failed to update profile");
             console.error("Error updating profile:", error);
+            setError("Failed to update profile");
         }
     };
 
@@ -299,7 +298,11 @@ export default function Profile() {
     }
 
     if (!userData) {
-        return null;
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-2xl text-red-500">Failed to load profile data</div>
+            </div>
+        );
     }
 
     return (
@@ -309,9 +312,9 @@ export default function Profile() {
                 <div className="flex items-center space-x-6 mb-8">
                     <div className="relative group w-48 h-32">
                         <img
-                            src={userData.image}
+                            src={userData.image || "https://archive.org/download/instagram-plain-round/instagram%20dip%20in%20hair.jpg"}
                             alt={userData.charityName}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover rounded-lg"
                         />
                     </div>
 
@@ -321,9 +324,7 @@ export default function Profile() {
                                 <input
                                     type="text"
                                     value={newCharityName}
-                                    onChange={(e) =>
-                                        setNewCharityName(e.target.value)
-                                    }
+                                    onChange={(e) => setNewCharityName(e.target.value)}
                                     className="text-3xl font-bold border-2 border-gray-300 rounded px-2 py-1"
                                 />
                                 <button
@@ -368,8 +369,7 @@ export default function Profile() {
                                 {userData.registrationNumber}
                             </p>
                             <div className="absolute hidden group-hover:block bg-gray-800 text-white text-sm rounded px-2 py-1 mt-1">
-                                Please email us to change your registration
-                                number
+                                Please email us to change your registration number
                             </div>
                         </div>
                     </div>
@@ -395,9 +395,7 @@ export default function Profile() {
                         {isEditing ? (
                             <textarea
                                 value={newDescription}
-                                onChange={(e) =>
-                                    setNewDescription(e.target.value)
-                                }
+                                onChange={(e) => setNewDescription(e.target.value)}
                                 className="w-full p-2 border border-gray-300 rounded-md"
                                 rows={4}
                             />
@@ -427,6 +425,8 @@ export default function Profile() {
                     </button>
                 </div>
             </div>
+
+            <ContactInfoPage />
 
             {/* Password Management Section */}
             <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
@@ -460,7 +460,7 @@ export default function Profile() {
                 ) : (
                     <div className="space-y-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-gray-700 text-sm font-bold mb-2">
                                 Current Password
                             </label>
                             <input
@@ -470,9 +470,8 @@ export default function Profile() {
                                 className="w-full p-2 border border-gray-300 rounded-md"
                             />
                         </div>
-
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-gray-700 text-sm font-bold mb-2">
                                 New Password
                             </label>
                             <input
@@ -482,31 +481,21 @@ export default function Profile() {
                                 className="w-full p-2 border border-gray-300 rounded-md"
                             />
                         </div>
-
                         {passwordError && (
                             <p className="text-red-500">{passwordError}</p>
                         )}
-
-                        <div className="flex space-x-4">
+                        <div className="flex justify-end space-x-2">
                             <button
-                                onClick={handlePasswordChange}
-                                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                                Update Password
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setShowPasswordChange(false);
-                                    setOldPassword("");
-                                    setNewPassword("");
-                                    setPasswordError("");
-                                }}
-                                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                                onClick={() => setShowPasswordChange(false)}
+                                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
                                 Cancel
                             </button>
+                            <button
+                                onClick={handlePasswordChange}
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                Update Password
+                            </button>
                         </div>
-                        
-                        
-
                     </div>
                 )}
             </div>
@@ -600,7 +589,7 @@ export default function Profile() {
                         {userData.wishlist.map((item) => (
                             <div
                                 key={item._id}
-                                className="bg-gray-50 rounded-lg p-6 relative flex flex-col h-full">
+                                className="relative bg-gray-50 rounded-lg p-4">
                                 <button
                                     onClick={() => handleDeleteItem(item._id)}
                                     className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
@@ -649,14 +638,12 @@ export default function Profile() {
             </div>
 
             <div className="mt-8 text-center">
-                            <Link
-                                href="/profile/contact-info"
-                                className="text-blue-600 hover:underline text-lg"
-                            >
-                                View or Edit Contact Info
-                            </Link>
-                        
-                        </div>
+                <Link
+                    href="/profile/contact-info"
+                    className="text-blue-600 hover:underline text-lg">
+                    View or Edit Contact Info
+                </Link>
+            </div>
         </div>
     );
 }
