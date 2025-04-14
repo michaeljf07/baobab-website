@@ -1,30 +1,89 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 export default function ContactInfoPage() {
+    const { data: session } = useSession();
     const [isEditing, setIsEditing] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({
-        name: "Gurshaan Sidhu",
-        email: "gurshaan@example.com",
-        phone: "(416) 123-4567",
-        website: "https://outreachbaobab.org",
-        tagline: "Co-founder of Baobab | Community-first innovator",
+        name: "",
+        email: "",
+        phone: "",
+        website: "",
+        tagline: "",
     });
+
+    const userId = session?.user?.id;
+
+    useEffect(() => {
+        if (!userId) return;
+
+        const fetchContactInfo = async () => {
+            try {
+                const res = await fetch("/api/users/contact-info");
+            
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    console.error("Error response:", errorText);
+                    throw new Error("Failed to fetch contact info");
+                }
+            
+                const text = await res.text();
+                const data = text ? JSON.parse(text) : {};
+            
+                setFormData({
+                    name: data.name || "",
+                    email: data.email || "",
+                    phone: data.phone || "",
+                    website: data.website || "",
+                    tagline: data.tagline || "",
+                });
+            } catch (error) {
+                console.error("Error fetching contact info:", error);
+            
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchContactInfo();
+    }, [userId, session?.user?.name]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSave = () => {
-        // TODO: send formData to database if needed
-        setIsEditing(false);
+    const handleSave = async () => {
+        try {
+            console.log("THIS IS THE DATA", formData)
+            const res = await fetch("/api/users/contact-info", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+    
+            const result = await res.json();
+            console.log("Server response:", result);
+    
+            if (!res.ok) throw new Error(result.error || "Failed to save contact info");
+    
+            alert("Contact info saved!");
+            setIsEditing(false);
+        } catch (error) {
+            console.error("Error saving contact info:", error);
+            const message = error instanceof Error ? error.message : "An unknown error occurred";
+            alert("Error: " + message);
+        }
     };
+    
 
-    const handleCancel = () => {
-        // Optional: reset to previous saved data
-        setIsEditing(false);
-    };
+    const handleCancel = () => setIsEditing(false);
+
+    if (loading) return <p className="text-center mt-10">Loading...</p>;
 
     return (
         <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg space-y-4">
