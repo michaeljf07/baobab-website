@@ -8,7 +8,9 @@ import { signOut, useSession } from "next-auth/react";
 function Navbar() {
     const { data: session } = useSession();
     const router = usePathname();
-    const profilePicture = session?.user?.image || "/logo.png";
+    const profilePicture =
+        session?.user?.image ||
+        "https://archive.org/download/instagram-plain-round/instagram%20dip%20in%20hair.jpg";
     const isActive = (path: string) => router === path;
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -28,7 +30,11 @@ function Navbar() {
             <div className="flex items-center w-full justify-between px-4 md:px-12">
                 {/* Logo */}
                 <Link href="/" className="flex-shrink-0">
-                    <img src="/logo.png" className="w-14 rounded-md" alt="Baobab Logo" />
+                    <img
+                        src="/logo.png"
+                        className="w-14 rounded-md"
+                        alt="Baobab Logo"
+                    />
                 </Link>
 
                 {/* Desktop Navigation */}
