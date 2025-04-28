@@ -89,7 +89,7 @@ function Navbar() {
                             <img
                                 src={profilePicture}
                                 alt="Profile"
-                                className="w-10 h-10 rounded-full cursor-pointer"
+                                className="w-10 h-10 rounded-full object-cover cursor-pointe"
                                 onClick={toggleDropdown}
                             />
                             {dropdownVisible && (
@@ -139,14 +139,13 @@ function Navbar() {
                         ) : (
                             <Link
                                 href="/profile"
-                                className="flex items-center space-x-2"
+                                className="flex items-center justify-center"
                                 onClick={() => setMobileMenuOpen(false)}>
                                 <img
                                     src={profilePicture}
                                     alt="Profile"
                                     className="w-8 h-8 rounded-full"
                                 />
-                                <span>Profile</span>
                             </Link>
                         )}
                     </div>

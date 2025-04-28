@@ -35,6 +35,13 @@ const userSchema = new Schema(
             type: String,
             required: true,
         },
+        contactInfo: {
+            name: String,
+            email: String,
+            phone: String,
+            website: String,
+            tagline: String,
+          },
         wishlist: {
             type: [
                 {
