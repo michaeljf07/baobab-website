@@ -7,7 +7,10 @@ Baobab is a platform designed to make charitable giving simple, transparent, and
 
 By streamlining the donation process, Baobab ensures that charities receive exactly what they need while allowing donors to see the real impact of their contributions.
 
-🚀 Current Status: The website is in development and will be launched soon! Stay tuned.
+![Homepage](homepage.png)
+![Charities](charities.png)
+![Wishlist](wishlist.png)
+
 ## Acknowledgements
 
  - [The Inspiration for Baobab's Model](https://throne.com/landing)
